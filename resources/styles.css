@@ -23,7 +23,53 @@ p {
 }
 
 #timer {
-    font-size: 4em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 4.5em;
+    height: 140px;
+}
+
+#timer > span {
+    height: 105px;
+}
+
+.time-section {
+    display: flex;
+    flex-direction: column;
+    height: 140px;
+}
+
+.upper-buttons, .lower-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.upper-buttons > input[type="button"] {
+    background-color: transparent;
+    width: 0px;
+    height: 0px;
+    border: 12px solid black;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: #494949;
+    border-left-color: transparent;
+    padding: 0;
+}
+
+.lower-buttons > input[type="button"] {
+    background-color: transparent;
+    width: 0px;
+    height: 0px;
+    border: 12px solid black;
+    border-top-color: #494949;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    padding: 0;
 }
 
 #config {
@@ -75,7 +121,7 @@ input[type="number"] {
     outline: none;
 }
 
-input[type="button"] {
+#pause-button, #start-button {
     color: #e0e0e0;
     font-size: 0.8em;
     width: 110px;
