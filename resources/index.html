@@ -17,49 +17,49 @@
         <div id="timer">
             <div class="time-section">
                 <div class="upper-buttons">
-                    <input type="button" id="add-decimal-days">
-                    <input type="button" id="add-unit-days">
+                    <input type="button" id="add-decimal-days" onclick="changeTimer(this)">
+                    <input type="button" id="add-unit-days" onclick="changeTimer(this)">
                 </div>
                 <span id="days">00</span>
                 <div class="lower-buttons">
-                    <input type="button" id="sub-decimal-days">
-                    <input type="button" id="sub-unit-days">
+                    <input type="button" id="sub-decimal-days" onclick="changeTimer(this)">
+                    <input type="button" id="sub-unit-days" onclick="changeTimer(this)">
                 </div>
             </div>
             <span>:</span>
             <div class="time-section">
                 <div class="upper-buttons">
-                    <input type="button" id="add-decimal-hours">
-                    <input type="button" id="add-unit-hours">
+                    <input type="button" id="add-decimal-hours" onclick="changeTimer(this)">
+                    <input type="button" id="add-unit-hours" onclick="changeTimer(this)">
                 </div>
                 <span id="hours">00</span>
                 <div class="lower-buttons">
-                    <input type="button" id="sub-decimal-hours">
-                    <input type="button" id="sub-unit-hours">
+                    <input type="button" id="sub-decimal-hours" onclick="changeTimer(this)">
+                    <input type="button" id="sub-unit-hours" onclick="changeTimer(this)">
                 </div>
             </div>
             <span>:</span>
             <div class="time-section">
                 <div class="upper-buttons">
-                    <input type="button" id="add-decimal-minutes">
-                    <input type="button" id="add-unit-minutes">
+                    <input type="button" id="add-decimal-minutes" onclick="changeTimer(this)">
+                    <input type="button" id="add-unit-minutes" onclick="changeTimer(this)">
                 </div>
                 <span id="mins">00</span>
                 <div class="lower-buttons">
-                    <input type="button" id="sub-decimal-minutes">
-                    <input type="button" id="sub-unit-minutes">
+                    <input type="button" id="sub-decimal-minutes" onclick="changeTimer(this)">
+                    <input type="button" id="sub-unit-minutes" onclick="changeTimer(this)">
                 </div>
             </div>
             <span>:</span>
             <div class="time-section">
                 <div class="upper-buttons">
-                    <input type="button" id="add-decimal-seconds">
-                    <input type="button" id="add-unit-seconds">
+                    <input type="button" id="add-decimal-seconds" onclick="changeTimer(this)">
+                    <input type="button" id="add-unit-seconds" onclick="changeTimer(this)">
                 </div>
                 <span id="secs">00</span>
                 <div class="lower-buttons">
-                    <input type="button" id="sub-decimal-seconds">
-                    <input type="button" id="sub-unit-seconds">
+                    <input type="button" id="sub-decimal-seconds" onclick="changeTimer(this)">
+                    <input type="button" id="sub-unit-seconds" onclick="changeTimer(this)">
                 </div>
             </div>
         </div>
@@ -98,12 +98,6 @@
                     <option value="1" selected>Segundos</option>
                     <option value="2">Minutos</option>
                 </select>
-            </div>
-            <div id="initial-time" class="counter-value">
-                <span class="label">Tempo mínimo: </span>
-                <input type="number" name="initial-time-hour" id="initial-time-hour" value="0" min="0">
-                <input type="number" name="initial-time-minute" id="initial-time-minute" value="0" min="0">
-                <input type="number" name="initial-time-second" id="initial-time-second" value="0" min="0">
             </div>
         </div>
         <div>

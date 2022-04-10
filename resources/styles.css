@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'Oswald';
+    src: url('./fonts/Oswald-Regular.ttf') format('truetype');
+}
+
+* {
+    font-family: 'Oswald', sans-serif;
+}
+
 body {
     overflow: hidden;
     margin: 0;
@@ -23,12 +32,13 @@ p {
 }
 
 #timer {
+    font-size: 4.5em;
     display: flex;
+    height: 140px;
+    width: 350px;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-size: 4.5em;
-    height: 140px;
 }
 
 #timer > span {
@@ -70,6 +80,14 @@ p {
     border-bottom-color: transparent;
     border-left-color: transparent;
     padding: 0;
+}
+
+.upper-buttons > input[type="button"]:hover {
+    border-bottom-color: #999999;
+}
+
+.lower-buttons > input[type="button"]:hover {
+    border-top-color: #999999;
 }
 
 #config {
@@ -123,7 +141,7 @@ input[type="number"] {
 
 #pause-button, #start-button {
     color: #e0e0e0;
-    font-size: 0.8em;
+    font-size: 0.9em;
     width: 110px;
     height: 35px;
     padding: 0;

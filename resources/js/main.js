@@ -1,7 +1,8 @@
 let streamlabs = null
 let countDownDate = null
-let timeLeft = null
+let timeLeft = 0
 let countDownRef = null
+let running = false
 let pause = false
 
 const socket = document.querySelector('#socket')
@@ -16,9 +17,6 @@ const bitsCounter = document.querySelector('#bits-counter')
 const donateValue = document.querySelector('#donate-value')
 const donateSelect = document.querySelector('#donate-select')
 const donateCounter = document.querySelector('#donate-counter')
-const initialTimeHour = document.querySelector('#initial-time-hour')
-const initialTimeMinute = document.querySelector('#initial-time-minute')
-const initialTimeSecond = document.querySelector('#initial-time-second')
 const enableCounter = document.querySelector('#enable-counter')
 const daysLabel = document.getElementById("days")
 const hoursLabel = document.getElementById("hours")
@@ -34,10 +32,8 @@ async function startCountDown() {
 
         if (startButton.value === 'Começar') {
 
-            countDownDate = new Date().getTime()
-                + parseFloat(initialTimeHour.value) * 60 * 60 * 1000
-                + parseFloat(initialTimeMinute.value) * 60 * 1000
-                + parseFloat(initialTimeSecond.value) * 1000
+            countDownDate = new Date().getTime() + (timeLeft > 0 ? timeLeft : 1000)
+
             countDownRef = setInterval(countDownFunction, 1000)
             const socketToken = socket.value
             await Neutralino.storage.setData('subathonConfig',
@@ -51,9 +47,6 @@ async function startCountDown() {
                     donateValue: donateValue.value,
                     donateSelect: donateSelect.value,
                     donateCounter: donateCounter.value,
-                    initialTimeHour: initialTimeHour.value,
-                    initialTimeMinute: initialTimeMinute.value,
-                    initialTimeSecond: initialTimeSecond.value,
                     enableCounter: enableCounter.checked
                 })
             )
@@ -61,6 +54,7 @@ async function startCountDown() {
             streamlabs = io(`https://sockets.streamlabs.com?token=${socketToken}`, { transports: ['websocket'] })
 
             streamlabs.on('connect', () => {
+                running = true
                 startButton.value = 'Parar'
                 startButton.classList.add('connected')
                 pauseButton.removeAttribute('hidden')
@@ -73,12 +67,10 @@ async function startCountDown() {
                 donateValue.disabled = true
                 donateSelect.disabled = true
                 donateCounter.disabled = true
-                initialTimeHour.disabled = true
-                initialTimeMinute.disabled = true
-                initialTimeSecond.disabled = true
             })
 
             streamlabs.on('disconnect', () => {
+                running = false
                 startButton.value = 'Começar'
                 startButton.classList.remove('connected')
                 pauseButton.setAttribute('hidden', true)
@@ -91,9 +83,6 @@ async function startCountDown() {
                 donateValue.disabled = false
                 donateSelect.disabled = false
                 donateCounter.disabled = false
-                initialTimeHour.disabled = true
-                initialTimeMinute.disabled = true
-                initialTimeSecond.disabled = true
             })
 
             streamlabs.on('event', (eventData) => {
@@ -156,6 +145,7 @@ async function startCountDown() {
         }
         else {
             streamlabs.disconnect()
+            running = false
             startButton.value = 'Começar'
             startButton.classList.remove('connected')
             pauseButton.setAttribute('hidden', true)
@@ -171,40 +161,15 @@ async function startCountDown() {
             donateValue.disabled = false
             donateSelect.disabled = false
             donateCounter.disabled = false
-            initialTimeHour.disabled = true
-            initialTimeMinute.disabled = true
-            initialTimeSecond.disabled = true
-            daysLabel.innerHTML = "00"
-            hoursLabel.innerHTML = "00"
-            minutesLabel.innerHTML = "00"
-            secondsLabel.innerHTML = "00"
+            timeLeft = 0
+            updateTimer()
             clearInterval(countDownRef)
             await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00:00")
         }
     }
 }
 
-function pauseCountDown() {
-    if (pause) {
-        pause = false
-        pauseButton.value = 'Pausar'
-        pauseButton.classList.remove('paused')
-        countDownDate = new Date().getTime() + timeLeft
-        countDownRef = setInterval(countDownFunction, 1000)
-    }
-    else {
-        pause = true
-        pauseButton.value = 'Resumir'
-        pauseButton.classList.add('paused')
-        clearInterval(countDownRef)
-        countDownRef = null
-    }
-}
-
-async function countDownFunction() {
-    const now = new Date().getTime();
-    timeLeft = countDownDate - now;
-
+async function updateTimer() {
     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
@@ -215,15 +180,34 @@ async function countDownFunction() {
     minutesLabel.innerHTML = minutes >= 10 ? minutes : "0" + minutes
     secondsLabel.innerHTML = seconds >= 10 ? seconds : "0" + seconds
     await Neutralino.filesystem.writeFile('./timer.txt', `${daysLabel.innerHTML}:${hoursLabel.innerHTML}:${minutesLabel.innerHTML}:${secondsLabel.innerHTML}`)
+}
+
+async function countDownFunction() {
+    const now = new Date().getTime();
+    timeLeft = countDownDate - now;
+
+    updateTimer()
 
     if (timeLeft < 0) {
-        clearInterval(countDownRef);
-        startButton.value = 'Start'
+        running = false
+        startButton.value = 'Começar'
         startButton.classList.remove('connected')
-        daysLabel.innerHTML = "00"
-        hoursLabel.innerHTML = "00"
-        minutesLabel.innerHTML = "00"
-        secondsLabel.innerHTML = "00"
+        pauseButton.setAttribute('hidden', true)
+        pauseButton.value = 'Pausar'
+        pauseButton.classList.remove('paused')
+        pause = false
+        socket.disabled = false
+        subscriptionSelect.disabled = false
+        subscriptionCounter.disabled = false
+        bitsValue.disabled = false
+        bitsSelect.disabled = false
+        bitsCounter.disabled = false
+        donateValue.disabled = false
+        donateSelect.disabled = false
+        donateCounter.disabled = false
+        timeLeft = 0
+        updateTimer()
+        clearInterval(countDownRef)
         await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00:00")
     }
 }
@@ -246,9 +230,6 @@ async function loadConfig() {
             donateValue.value = data.donateValue
             donateSelect.value = data.donateSelect
             donateCounter.value = data.donateCounter
-            initialTimeHour.value = data.initialTimeHour
-            initialTimeMinute.value = data.initialTimeMinute
-            initialTimeSecond.value = data.initialTimeSecond
             enableCounter.checked = data.enableCounter
         }
     }
@@ -257,7 +238,58 @@ async function loadConfig() {
     }
 }
 
-Neutralino.init()
-loadConfig()
+function pauseCountDown() {
+    if (pause) {
+        pause = false
+        pauseButton.value = 'Pausar'
+        pauseButton.classList.remove('paused')
+        countDownDate = new Date().getTime() + timeLeft
+        countDownRef = setInterval(countDownFunction, 1000)
+    }
+    else {
+        pause = true
+        pauseButton.value = 'Resumir'
+        pauseButton.classList.add('paused')
+        clearInterval(countDownRef)
+        countDownRef = null
+    }
+}
 
+async function changeTimer(element) {
+    const command = element.id.split('-')
+    let value = null
+
+    switch (command[2]) {
+        case 'days':
+            value = 1000 * 60 * 60 * 24
+            break
+        case 'hours':
+            value = 1000 * 60 * 60
+            break
+        case 'minutes':
+            value = 1000 * 60
+            break
+        case 'seconds':
+            value = 1000
+            break
+    }
+
+    value = command[1] === 'unit' ? value : value * 10
+    value = command[0] === 'add' ? value : value * (-1)
+
+    if (value < 0 && Math.abs(value) > timeLeft) {
+        return
+    }
+
+    if (pause || !running) {
+        timeLeft += value
+        updateTimer()
+    }
+    else {
+        countDownDate += value
+    }
+}
+
+Neutralino.init()
 Neutralino.events.on('windowClose', onWindowClose)
+loadConfig()
