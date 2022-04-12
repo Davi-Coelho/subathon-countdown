@@ -189,6 +189,7 @@ async function countDownFunction() {
     updateTimer()
 
     if (timeLeft < 0) {
+        streamlabs.disconnect()
         running = false
         startButton.value = 'Começar'
         startButton.classList.remove('connected')
