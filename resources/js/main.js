@@ -4,6 +4,8 @@ let timeLeft = 0
 let countDownRef = null
 let running = false
 let pause = false
+let maxTimeValue = 0
+let currentLogFile = ''
 
 const socket = document.querySelector('#socket')
 const startButton = document.querySelector('#start-button')
@@ -18,10 +20,12 @@ const donateValue = document.querySelector('#donate-value')
 const donateSelect = document.querySelector('#donate-select')
 const donateCounter = document.querySelector('#donate-counter')
 const enableCounter = document.querySelector('#enable-counter')
-const daysLabel = document.getElementById("days")
-const hoursLabel = document.getElementById("hours")
-const minutesLabel = document.getElementById("mins")
-const secondsLabel = document.getElementById("secs")
+const daysLabel = document.getElementById('days')
+const hoursLabel = document.getElementById('hours')
+const minutesLabel = document.getElementById('mins')
+const secondsLabel = document.getElementById('secs')
+const maxTime = document.querySelector('#max-time')
+const enableLimit = document.querySelector('#enable-limit')
 
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
@@ -32,7 +36,11 @@ async function startCountDown() {
 
         if (startButton.value === 'Começar') {
 
+            currentLogFile = new Date().toLocaleString('pt-BR').replace(/\//g, '-').replace(/:/g,'_')
+            await Neutralino.filesystem.writeFile(`./resumo ${currentLogFile}.txt`, "")
+
             countDownDate = new Date().getTime() + (timeLeft > 0 ? timeLeft : 1000)
+            maxTimeValue = new Date().getTime() + parseFloat(maxTime.value) * 60 * 60 * 1000
 
             countDownRef = setInterval(countDownFunction, 1000)
             const socketToken = socket.value
@@ -47,7 +55,9 @@ async function startCountDown() {
                     donateValue: donateValue.value,
                     donateSelect: donateSelect.value,
                     donateCounter: donateCounter.value,
-                    enableCounter: enableCounter.checked
+                    enableCounter: enableCounter.checked,
+                    maxTime: maxTime.value,
+                    enableLimit: enableLimit.checked
                 })
             )
 
@@ -67,6 +77,8 @@ async function startCountDown() {
                 donateValue.disabled = true
                 donateSelect.disabled = true
                 donateCounter.disabled = true
+                maxTime.disabled = true
+                enableLimit.disabled = true
             })
 
             streamlabs.on('disconnect', () => {
@@ -83,22 +95,35 @@ async function startCountDown() {
                 donateValue.disabled = false
                 donateSelect.disabled = false
                 donateCounter.disabled = false
+                maxTime.disabled = false
+                enableLimit.disabled = false
             })
 
-            streamlabs.on('event', (eventData) => {
+            streamlabs.on('event', async (eventData) => {
 
                 const event = eventData.message[0]
                 console.log(eventData)
-
+                
                 if (eventData.for === 'streamlabs' && eventData.type === 'donation' && enableCounter.checked && !pause) {
                     if (event.amount >= parseFloat(donateValue.value)) {
                         const times = Math.floor(event.amount / parseFloat(donateValue.value))
-                        switch (bitsSelect.value) {
+                        await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.from} doou ${event.formatted_amount}.\n`)
+                        switch (donateSelect.value) {
                             case '1':
-                                countDownDate += times * (parseFloat(donateCounter.value) * 1000)
+                                if (!enableLimit.checked  || (countDownDate + times * (parseFloat(donateCounter.value) * 1000)) <= maxTimeValue) {
+                                    countDownDate += times * (parseFloat(donateCounter.value) * 1000)
+                                }
+                                else {
+                                    countDownDate = maxTimeValue
+                                }
                                 break
                             case '2':
-                                countDownDate += times * (parseFloat(donateCounter.value) * 1000 * 60)
+                                if (!enableLimit.checked  || (countDownDate + times * (parseFloat(donateCounter.value) * 1000 * 60)) <= maxTimeValue) {
+                                    countDownDate += times * (parseFloat(donateCounter.value) * 1000 * 60)
+                                }
+                                else {
+                                    countDownDate = maxTimeValue
+                                }
                                 break
                         }
                     }
@@ -107,34 +132,67 @@ async function startCountDown() {
                 if (eventData.for === 'twitch_account' && enableCounter.checked && !pause) {
                     switch (eventData.type) {
                         case 'subscription':
+                            await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} se inscreveu.\n`)
                             switch (subscriptionSelect.value) {
                                 case '1':
-                                    countDownDate += parseFloat(subscriptionCounter.value) * 1000
+                                    if (!enableLimit.checked  || (countDownDate + parseFloat(subscriptionCounter.value) * 1000) <= maxTimeValue) {
+                                        countDownDate += parseFloat(subscriptionCounter.value) * 1000
+                                    }
+                                    else {
+                                        countDownDate = maxTimeValue
+                                    }
                                     break
                                 case '2':
-                                    countDownDate += parseFloat(subscriptionCounter.value) * 1000 * 60
+                                    if (!enableLimit.checked || (countDownDate + parseFloat(subscriptionCounter.value) * 1000 * 60) <= maxTimeValue) {
+                                        countDownDate += parseFloat(subscriptionCounter.value) * 1000 * 60
+                                    }
+                                    else {
+                                        countDownDate = maxTimeValue
+                                    }
                                     break
                             }
                             break
                         case 'resub':
+                            await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} se inscreveu.\n`)
                             switch (subscriptionSelect.value) {
                                 case '1':
-                                    countDownDate += parseFloat(subscriptionCounter.value) * 1000
+                                    if (!enableLimit.checked || (countDownDate + parseFloat(subscriptionCounter.value) * 1000) <= maxTimeValue) {
+                                        countDownDate += parseFloat(subscriptionCounter.value) * 1000
+                                    }
+                                    else {
+                                        countDownDate = maxTimeValue
+                                    }
                                     break
                                 case '2':
-                                    countDownDate += parseFloat(subscriptionCounter.value) * 1000 * 60
+                                    if (!enableLimit.checked || (countDownDate + parseFloat(subscriptionCounter.value) * 1000 * 60) <= maxTimeValue) {
+                                        countDownDate += parseFloat(subscriptionCounter.value) * 1000 * 60
+                                    }
+                                    else {
+                                        countDownDate = maxTimeValue
+                                    }
                                     break
                             }
                             break
                         case 'bits':
+                            await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} doou ${event.amount} bits.\n`)
                             if (event.amount >= parseFloat(bitsValue.value)) {
                                 const times = Math.floor(event.amount / parseFloat(bitsValue.value))
                                 switch (bitsSelect.value) {
                                     case '1':
-                                        countDownDate += times * (parseFloat(bitsCounter.value) * 1000)
+                                        if (!enableLimit.checked || (countDownDate + times * (parseFloat(bitsCounter.value) * 1000)) <= maxTimeValue) {
+                                            countDownDate += times * (parseFloat(bitsCounter.value) * 1000)
+                                        }
+                                        else {
+                                            countDownDate = maxTimeValue
+                                        }
                                         break
                                     case '2':
-                                        countDownDate += times * (parseFloat(bitsCounter.value) * 1000 * 60)
+                                        if (!enableLimit.checked || (countDownDate + times * (parseFloat(bitsCounter.value) * 1000) * 60) <= maxTimeValue) {
+                                            countDownDate += times * (parseFloat(bitsCounter.value) * 1000 * 60)
+                                        }
+                                        else {
+                                            countDownDate = maxTimeValue
+                                        }
                                         break
                                 }
                             }
@@ -161,6 +219,8 @@ async function startCountDown() {
             donateValue.disabled = false
             donateSelect.disabled = false
             donateCounter.disabled = false
+            maxTime.disabled = false
+            enableLimit.disabled = false
             timeLeft = 0
             updateTimer()
             clearInterval(countDownRef)
@@ -206,6 +266,8 @@ async function countDownFunction() {
         donateValue.disabled = false
         donateSelect.disabled = false
         donateCounter.disabled = false
+        maxTime.disabled = false
+        enableLimit.disabled = false
         timeLeft = 0
         updateTimer()
         clearInterval(countDownRef)
@@ -232,6 +294,8 @@ async function loadConfig() {
             donateSelect.value = data.donateSelect
             donateCounter.value = data.donateCounter
             enableCounter.checked = data.enableCounter
+            maxTime.value = data.maxTime
+            enableLimit.checked = data.enableLimit
         }
     }
     catch (e) {

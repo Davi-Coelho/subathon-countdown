@@ -13,7 +13,8 @@
     "os.*",
     "storage.*",
     "debug.log",
-    "filesystem.writeFile"
+    "filesystem.writeFile",
+    "filesystem.appendFile"
   ],
   "modes": {
     "window": {
