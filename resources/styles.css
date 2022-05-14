@@ -41,7 +41,7 @@ p {
     align-items: center;
 }
 
-#timer > span {
+#timer>span {
     height: 105px;
 }
 
@@ -51,14 +51,15 @@ p {
     height: 140px;
 }
 
-.upper-buttons, .lower-buttons {
+.upper-buttons,
+.lower-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 }
 
-.upper-buttons > input[type="button"] {
+.upper-buttons>input[type="button"] {
     background-color: transparent;
     width: 0px;
     height: 0px;
@@ -70,7 +71,7 @@ p {
     padding: 0;
 }
 
-.lower-buttons > input[type="button"] {
+.lower-buttons>input[type="button"] {
     background-color: transparent;
     width: 0px;
     height: 0px;
@@ -82,11 +83,11 @@ p {
     padding: 0;
 }
 
-.upper-buttons > input[type="button"]:hover {
+.upper-buttons>input[type="button"]:hover {
     border-bottom-color: #999999;
 }
 
-.lower-buttons > input[type="button"]:hover {
+.lower-buttons>input[type="button"]:hover {
     border-top-color: #999999;
 }
 
@@ -109,12 +110,12 @@ p {
     width: 350px;
 }
 
-.counter-value > .label {
+.counter-value>.label {
     display: inline-block;
     width: 105px;
 }
 
-.counter-value > span {
+.counter-value>span {
     display: inline-block;
     margin: 0px 2px;
 }
@@ -129,7 +130,8 @@ input[type="number"] {
     -webkit-appearance: none;
 }
 
-#socket, input[type="number"] {
+#socket,
+input[type="number"] {
     color: #e0e0e0;
     background-color: rgb(58, 58, 58);
     line-height: 1.5;
@@ -139,7 +141,8 @@ input[type="number"] {
     outline: none;
 }
 
-#pause-button, #start-button {
+#pause-button,
+#start-button {
     color: #e0e0e0;
     font-size: 0.9em;
     width: 110px;
@@ -192,4 +195,29 @@ select {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+}
+
+#hide-button {
+    position: absolute;
+    width: 27px;
+    height: 27px;
+    bottom: 1%;
+    right: 1%;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
