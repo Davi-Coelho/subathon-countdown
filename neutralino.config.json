@@ -24,7 +24,7 @@
       "width": 450,
       "height": 600,
       "fullScreen": false,
-      "alwaysOnTop": true,
+      "alwaysOnTop": false,
       "icon": "/resources/icons/appIcon.png",
       "enableInspector": false,
       "borderless": false,
