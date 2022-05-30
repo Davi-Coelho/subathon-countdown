@@ -41,7 +41,7 @@ async function startCountDown() {
 
         if (startButton.value === 'Começar') {
 
-            currentLogFile = new Date().toLocaleString('pt-BR').replace(/\//g, '-').replace(/:/g,'_')
+            currentLogFile = new Date().toLocaleString('pt-BR').replace(/\//g, '-').replace(/:/g, '_')
             await Neutralino.filesystem.writeFile(`./resumo ${currentLogFile}.txt`, "")
 
             countDownDate = new Date().getTime() + (timeLeft > 0 ? timeLeft : 1000)
@@ -108,11 +108,13 @@ async function startCountDown() {
 
                 const event = eventData.message[0]
                 console.log(eventData)
-                
+
                 if (!eventData.for && eventData.type === 'donation' && enableCounter.checked && !pause) {
                     let amount = 0
 
-                    if(event.currency !== 'BRL') {
+                    console.log(event.currency)
+                    if (event.currency !== 'BRL') {
+                        console.log('Convertendo...')
                         await fetch(`https://api.exchangerate.host/latest?base=${event.currency}&amount=${event.amount}&symbols=BRL`)
                             .then(response => response.text())
                             .then(data => amount = (JSON.parse(data)).rates.BRL)
@@ -123,27 +125,25 @@ async function startCountDown() {
 
                     console.log(amount)
 
-                    if (amount >= parseFloat(donateValue.value)) {
-                        const times = Math.floor(amount / parseFloat(donateValue.value))
-                        await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.from} doou R$${amount}\n`)
-                        switch (donateSelect.value) {
-                            case '1':
-                                if (!enableLimit.checked  || (countDownDate + times * (parseFloat(donateCounter.value) * 1000)) <= maxTimeValue) {
-                                    countDownDate += times * (parseFloat(donateCounter.value) * 1000)
-                                }
-                                else {
-                                    countDownDate = maxTimeValue
-                                }
-                                break
-                            case '2':
-                                if (!enableLimit.checked  || (countDownDate + times * (parseFloat(donateCounter.value) * 1000 * 60)) <= maxTimeValue) {
-                                    countDownDate += times * (parseFloat(donateCounter.value) * 1000 * 60)
-                                }
-                                else {
-                                    countDownDate = maxTimeValue
-                                }
-                                break
-                        }
+                    const times = amount / parseFloat(donateValue.value)
+                    await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.from} doou R$${amount}\n`)
+                    switch (donateSelect.value) {
+                        case '1':
+                            if (!enableLimit.checked || (countDownDate + times * (parseFloat(donateCounter.value) * 1000)) <= maxTimeValue) {
+                                countDownDate += times * (parseFloat(donateCounter.value) * 1000)
+                            }
+                            else {
+                                countDownDate = maxTimeValue
+                            }
+                            break
+                        case '2':
+                            if (!enableLimit.checked || (countDownDate + times * (parseFloat(donateCounter.value) * 1000 * 60)) <= maxTimeValue) {
+                                countDownDate += times * (parseFloat(donateCounter.value) * 1000 * 60)
+                            }
+                            else {
+                                countDownDate = maxTimeValue
+                            }
+                            break
                     }
                     console.log(`Muito obrigado pelo donate de ${event.formatted_amount}, ${event.name}!`)
                 }
@@ -153,7 +153,7 @@ async function startCountDown() {
                             await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} se inscreveu.\n`)
                             switch (subscriptionSelect.value) {
                                 case '1':
-                                    if (!enableLimit.checked  || (countDownDate + parseFloat(subscriptionCounter.value) * 1000) <= maxTimeValue) {
+                                    if (!enableLimit.checked || (countDownDate + parseFloat(subscriptionCounter.value) * 1000) <= maxTimeValue) {
                                         countDownDate += parseFloat(subscriptionCounter.value) * 1000
                                     }
                                     else {
@@ -193,27 +193,26 @@ async function startCountDown() {
                             break
                         case 'bits':
                             await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} doou ${event.amount} bits.\n`)
-                            if (event.amount >= parseFloat(bitsValue.value)) {
-                                const times = Math.floor(event.amount / parseFloat(bitsValue.value))
-                                switch (bitsSelect.value) {
-                                    case '1':
-                                        if (!enableLimit.checked || (countDownDate + times * (parseFloat(bitsCounter.value) * 1000)) <= maxTimeValue) {
-                                            countDownDate += times * (parseFloat(bitsCounter.value) * 1000)
-                                        }
-                                        else {
-                                            countDownDate = maxTimeValue
-                                        }
-                                        break
-                                    case '2':
-                                        if (!enableLimit.checked || (countDownDate + times * (parseFloat(bitsCounter.value) * 1000) * 60) <= maxTimeValue) {
-                                            countDownDate += times * (parseFloat(bitsCounter.value) * 1000 * 60)
-                                        }
-                                        else {
-                                            countDownDate = maxTimeValue
-                                        }
-                                        break
-                                }
+                            const times = event.amount / parseFloat(bitsValue.value)
+                            switch (bitsSelect.value) {
+                                case '1':
+                                    if (!enableLimit.checked || (countDownDate + times * (parseFloat(bitsCounter.value) * 1000)) <= maxTimeValue) {
+                                        countDownDate += times * (parseFloat(bitsCounter.value) * 1000)
+                                    }
+                                    else {
+                                        countDownDate = maxTimeValue
+                                    }
+                                    break
+                                case '2':
+                                    if (!enableLimit.checked || (countDownDate + times * (parseFloat(bitsCounter.value) * 1000) * 60) <= maxTimeValue) {
+                                        countDownDate += times * (parseFloat(bitsCounter.value) * 1000 * 60)
+                                    }
+                                    else {
+                                        countDownDate = maxTimeValue
+                                    }
+                                    break
                             }
+                            console.log(`Muito obrigado pelos ${event.amount}, ${event.name}!`)
                             break
                     }
                 }
@@ -378,7 +377,7 @@ async function hideShowWindow() {
     const height = (await Neutralino.window.getSize()).height
     const arrow = document.querySelector('.arrow')
 
-    if(height === 600) {
+    if (height === 600) {
         await Neutralino.window.setSize({ width: 450, height: 200 })
         streamLabsDiv.style.display = 'none'
         configDiv.style.display = 'none'
