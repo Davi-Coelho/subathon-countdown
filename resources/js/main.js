@@ -23,7 +23,6 @@ const donateValue = document.querySelector('#donate-value')
 const donateSelect = document.querySelector('#donate-select')
 const donateCounter = document.querySelector('#donate-counter')
 const enableCounter = document.querySelector('#enable-counter')
-const daysLabel = document.getElementById('days')
 const hoursLabel = document.getElementById('hours')
 const minutesLabel = document.getElementById('mins')
 const secondsLabel = document.getElementById('secs')
@@ -241,22 +240,20 @@ async function startCountDown() {
             timeLeft = 0
             updateTimer()
             clearInterval(countDownRef)
-            await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00:00")
+            await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
         }
     }
 }
 
 async function updateTimer() {
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-    daysLabel.innerHTML = days >= 10 ? days : "0" + days
     hoursLabel.innerHTML = hours >= 10 ? hours : "0" + hours
     minutesLabel.innerHTML = minutes >= 10 ? minutes : "0" + minutes
     secondsLabel.innerHTML = seconds >= 10 ? seconds : "0" + seconds
-    await Neutralino.filesystem.writeFile('./timer.txt', `${daysLabel.innerHTML}:${hoursLabel.innerHTML}:${minutesLabel.innerHTML}:${secondsLabel.innerHTML}`)
+    await Neutralino.filesystem.writeFile('./timer.txt', `${hoursLabel.innerHTML}:${minutesLabel.innerHTML}:${secondsLabel.innerHTML}`)
 }
 
 async function countDownFunction() {
@@ -288,7 +285,7 @@ async function countDownFunction() {
         timeLeft = 0
         updateTimer()
         clearInterval(countDownRef)
-        await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00:00")
+        await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
     }
 }
 
@@ -342,9 +339,6 @@ async function changeTimer(element) {
     let value = null
 
     switch (command[2]) {
-        case 'days':
-            value = 1000 * 60 * 60 * 24
-            break
         case 'hours':
             value = 1000 * 60 * 60
             break
