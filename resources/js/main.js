@@ -46,7 +46,8 @@ async function startCountDown() {
             countDownDate = new Date().getTime() + (timeLeft > 0 ? timeLeft : 1000)
             maxTimeValue = new Date().getTime() + parseFloat(maxTime.value) * 60 * 60 * 1000
 
-            countDownRef = setInterval(countDownFunction, 1000)
+            countDownRef = new Worker('js/worker.js')
+            countDownRef.onmessage = countDownFunction
             const socketToken = socket.value
             await Neutralino.storage.setData('subathonConfig',
                 JSON.stringify({
@@ -239,7 +240,8 @@ async function startCountDown() {
             enableLimit.disabled = false
             timeLeft = 0
             updateTimer()
-            clearInterval(countDownRef)
+            countDownRef.terminate()
+            countDownRef = undefined
             await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
         }
     }
@@ -284,7 +286,8 @@ async function countDownFunction() {
         enableLimit.disabled = false
         timeLeft = 0
         updateTimer()
-        clearInterval(countDownRef)
+        countDownRef.terminate()
+        countDownRef = undefined
         await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
     }
 }
@@ -323,14 +326,15 @@ function pauseCountDown() {
         pauseButton.value = 'Pausar'
         pauseButton.classList.remove('paused')
         countDownDate = new Date().getTime() + timeLeft
-        countDownRef = setInterval(countDownFunction, 1000)
+        countDownRef = new Worker('js/worker.js')
+        countDownRef.onmessage = countDownFunction
     }
     else {
         pause = true
         pauseButton.value = 'Resumir'
         pauseButton.classList.add('paused')
-        clearInterval(countDownRef)
-        countDownRef = null
+        countDownRef.terminate()
+        countDownRef = undefined
     }
 }
 
