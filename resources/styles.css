@@ -132,6 +132,7 @@ input[type="number"] {
 
 input[type="time"],
 input[type="date"] {
+    width: 80px;
     padding: 1px 4px;
 }
 

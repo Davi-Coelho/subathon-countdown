@@ -35,6 +35,9 @@ const hideButton = document.querySelector('#hide-button')
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
 hideButton.onclick = hideShowWindow
+timeLimit.oninput = updateTimeLeft
+dateLimit.oninput = updateTimeLeft
+maxTime.oninput = updateDeadEnd
 
 async function startCountDown() {
 
@@ -51,65 +54,21 @@ async function startCountDown() {
             countDownRef = new Worker('js/worker.js')
             countDownRef.onmessage = countDownFunction
             const socketToken = socket.value
-            await Neutralino.storage.setData('subathonConfig',
-                JSON.stringify({
-                    socketToken: socketToken,
-                    subscriptionSelect: subscriptionSelect.value,
-                    subscriptionCounter: subscriptionCounter.value,
-                    bitsValue: bitsValue.value,
-                    bitsSelect: bitsSelect.value,
-                    bitsCounter: bitsCounter.value,
-                    donateValue: donateValue.value,
-                    donateSelect: donateSelect.value,
-                    donateCounter: donateCounter.value,
-                    enableCounter: enableCounter.checked,
-                    maxTime: maxTime.value,
-                    enableLimit: enableLimit.checked
-                })
-            )
+            saveData()
 
             streamlabs = io(`https://sockets.streamlabs.com?token=${socketToken}`, { transports: ['websocket'] })
 
             streamlabs.on('connect', () => {
-                running = true
-                startButton.value = 'Parar'
-                startButton.classList.add('connected')
-                pauseButton.removeAttribute('hidden')
-                socket.disabled = true
-                subscriptionSelect.disabled = true
-                subscriptionCounter.disabled = true
-                bitsValue.disabled = true
-                bitsSelect.disabled = true
-                bitsCounter.disabled = true
-                donateValue.disabled = true
-                donateSelect.disabled = true
-                donateCounter.disabled = true
-                maxTime.disabled = true
-                enableLimit.disabled = true
+                switchMode(true)
             })
 
             streamlabs.on('disconnect', () => {
-                running = false
-                startButton.value = 'Começar'
-                startButton.classList.remove('connected')
-                pauseButton.setAttribute('hidden', true)
-                socket.disabled = false
-                subscriptionSelect.disabled = false
-                subscriptionCounter.disabled = false
-                bitsValue.disabled = false
-                bitsSelect.disabled = false
-                bitsCounter.disabled = false
-                donateValue.disabled = false
-                donateSelect.disabled = false
-                donateCounter.disabled = false
-                maxTime.disabled = false
-                enableLimit.disabled = false
+                switchMode(false)
             })
 
             streamlabs.on('event', async (eventData) => {
 
                 const event = eventData.message[0]
-                console.log(eventData)
 
                 if (!eventData.for && eventData.type === 'donation' && enableCounter.checked && !pause) {
                     let amount = 0
@@ -124,8 +83,6 @@ async function startCountDown() {
                     else {
                         amount = event.amount
                     }
-
-                    console.log(amount)
 
                     const times = amount / parseFloat(donateValue.value)
                     await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.from} doou R$${amount}\n`)
@@ -222,24 +179,10 @@ async function startCountDown() {
         }
         else {
             streamlabs.disconnect()
-            running = false
-            startButton.value = 'Começar'
-            startButton.classList.remove('connected')
-            pauseButton.setAttribute('hidden', true)
             pauseButton.value = 'Pausar'
             pauseButton.classList.remove('paused')
             pause = false
-            socket.disabled = false
-            subscriptionSelect.disabled = false
-            subscriptionCounter.disabled = false
-            bitsValue.disabled = false
-            bitsSelect.disabled = false
-            bitsCounter.disabled = false
-            donateValue.disabled = false
-            donateSelect.disabled = false
-            donateCounter.disabled = false
-            maxTime.disabled = false
-            enableLimit.disabled = false
+            switchMode(false)
             timeLeft = 0
             updateTimer()
             countDownRef.terminate()
@@ -268,24 +211,10 @@ async function countDownFunction() {
 
     if (timeLeft < 0) {
         streamlabs.disconnect()
-        running = false
-        startButton.value = 'Começar'
-        startButton.classList.remove('connected')
-        pauseButton.setAttribute('hidden', true)
         pauseButton.value = 'Pausar'
         pauseButton.classList.remove('paused')
         pause = false
-        socket.disabled = false
-        subscriptionSelect.disabled = false
-        subscriptionCounter.disabled = false
-        bitsValue.disabled = false
-        bitsSelect.disabled = false
-        bitsCounter.disabled = false
-        donateValue.disabled = false
-        donateSelect.disabled = false
-        donateCounter.disabled = false
-        maxTime.disabled = false
-        enableLimit.disabled = false
+        switchMode(false)
         timeLeft = 0
         updateTimer()
         countDownRef.terminate()
@@ -294,42 +223,30 @@ async function countDownFunction() {
     }
 }
 
-function onWindowClose() {
-    Neutralino.app.exit()
-}
+function switchMode(mode) {
+    if (mode) {
+        startButton.value = 'Parar'
+        startButton.classList.add('connected')
+        pauseButton.removeAttribute('hidden')
 
-function getDate() {
-    let d = new Date(),
-        month = (d.getMonth() + 1) < 10 ? "0" + (d.getMonth()+ 1)  : d.getMonth() + 1,
-        day = (d.getDate() < 10) ? "0" + d.getDate() : d.getDate(),
-        year = d.getFullYear()
-
-    return `${year}-${month}-${day}` 
-}
-
-async function loadConfig() {
-    dateLimit.value = getDate()
-    try {
-        const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
-
-        if (data) {
-            socket.value = data.socketToken
-            subscriptionSelect.value = data.subscriptionSelect
-            subscriptionCounter.value = data.subscriptionCounter
-            bitsValue.value = data.bitsValue
-            bitsSelect.value = data.bitsSelect
-            bitsCounter.value = data.bitsCounter
-            donateValue.value = data.donateValue
-            donateSelect.value = data.donateSelect
-            donateCounter.value = data.donateCounter
-            enableCounter.checked = data.enableCounter
-            maxTime.value = data.maxTime
-            enableLimit.checked = data.enableLimit
-        }
+    } else {
+        startButton.value = 'Começar'
+        startButton.classList.remove('connected')
+        pauseButton.setAttribute('hidden', true)
     }
-    catch (e) {
-        console.log(e)
-    }
+
+    running = mode
+    socket.disabled = mode
+    subscriptionSelect.disabled = mode
+    subscriptionCounter.disabled = mode
+    bitsValue.disabled = mode
+    bitsSelect.disabled = mode
+    bitsCounter.disabled = mode
+    donateValue.disabled = mode
+    donateSelect.disabled = mode
+    donateCounter.disabled = mode
+    maxTime.disabled = mode
+    enableLimit.disabled = mode
 }
 
 function pauseCountDown() {
@@ -404,6 +321,84 @@ async function hideShowWindow() {
         arrow.classList.add('up')
     }
 
+}
+
+function updateTimeLeft() {
+    const now = new Date().getTime()
+    const limit = new Date(`${dateLimit.value}T${timeLimit.value}`).getTime()
+    let timeLeft = limit - now
+    timeLeft = timeLeft / (1000 * 60 * 60)
+    maxTime.value = timeLeft.toFixed(1)
+}
+
+function updateDeadEnd() {
+    if (maxTime.value === '' || isNaN(parseFloat(maxTime.value))) {
+        maxTime.value = ''
+    }
+    else {
+        const now = new Date().getTime()
+        const timeLeft = parseFloat(maxTime.value) * 60 * 60 * 1000
+        const deadEnd = new Date(now + timeLeft)
+        const hours = deadEnd.getHours() < 10 ? "0" + deadEnd.getHours() : deadEnd.getHours()
+        const minutes = deadEnd.getMinutes() < 10 ? "0" + deadEnd.getMinutes() : deadEnd.getMinutes()
+        const day = (deadEnd.getDate() < 10) ? "0" + deadEnd.getDate() : deadEnd.getDate()
+        const month = (deadEnd.getMonth() + 1) < 10 ? "0" + (deadEnd.getMonth() + 1) : deadEnd.getMonth() + 1
+        const year = deadEnd.getFullYear()
+    
+        timeLimit.value = `${hours}:${minutes}`
+        dateLimit.value = `${year}-${month}-${day}`
+    }
+}
+
+async function saveData() {
+    await Neutralino.storage.setData('subathonConfig',
+        JSON.stringify({
+            socketToken: socket.value,
+            subscriptionSelect: subscriptionSelect.value,
+            subscriptionCounter: subscriptionCounter.value,
+            bitsValue: bitsValue.value,
+            bitsSelect: bitsSelect.value,
+            bitsCounter: bitsCounter.value,
+            donateValue: donateValue.value,
+            donateSelect: donateSelect.value,
+            donateCounter: donateCounter.value,
+            enableCounter: enableCounter.checked,
+            enableLimit: enableLimit.checked,
+            timeLimit: timeLimit.value,
+            dateLimit: dateLimit.value
+        })
+    )
+}
+
+async function loadConfig() {
+    try {
+        const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
+
+        if (data) {
+            socket.value = data.socketToken
+            subscriptionSelect.value = data.subscriptionSelect
+            subscriptionCounter.value = data.subscriptionCounter
+            bitsValue.value = data.bitsValue
+            bitsSelect.value = data.bitsSelect
+            bitsCounter.value = data.bitsCounter
+            donateValue.value = data.donateValue
+            donateSelect.value = data.donateSelect
+            donateCounter.value = data.donateCounter
+            enableCounter.checked = data.enableCounter
+            enableLimit.checked = data.enableLimit
+            timeLimit.value = data.timeLimit
+            dateLimit.value = data.dateLimit
+
+            updateTimeLeft()
+        }
+    }
+    catch (e) {
+        console.log(e)
+    }
+}
+
+function onWindowClose() {
+    Neutralino.app.exit()
 }
 
 Neutralino.init()
