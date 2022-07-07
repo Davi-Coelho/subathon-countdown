@@ -112,7 +112,7 @@ p {
 
 .counter-value>.label {
     display: inline-block;
-    width: 105px;
+    width: 90px;
 }
 
 .counter-value>span {
@@ -130,8 +130,20 @@ input[type="number"] {
     -webkit-appearance: none;
 }
 
+input[type="time"],
+input[type="date"] {
+    padding: 1px 4px;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
 #socket,
-input[type="number"] {
+input[type="number"],
+input[type="time"],
+input[type="date"] {
     color: #e0e0e0;
     background-color: rgb(58, 58, 58);
     line-height: 1.5;
@@ -220,4 +232,28 @@ input::-webkit-inner-spin-button {
 .down {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
+}
+
+#limit-time {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.limit-config {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.limit-config > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }

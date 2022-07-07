@@ -27,6 +27,8 @@ const hoursLabel = document.getElementById('hours')
 const minutesLabel = document.getElementById('mins')
 const secondsLabel = document.getElementById('secs')
 const maxTime = document.querySelector('#max-time')
+const timeLimit = document.querySelector('#time-limit')
+const dateLimit = document.querySelector('#date-limit')
 const enableLimit = document.querySelector('#enable-limit')
 const hideButton = document.querySelector('#hide-button')
 
@@ -296,7 +298,17 @@ function onWindowClose() {
     Neutralino.app.exit()
 }
 
+function getDate() {
+    let d = new Date(),
+        month = (d.getMonth() + 1) < 10 ? "0" + (d.getMonth()+ 1)  : d.getMonth() + 1,
+        day = (d.getDate() < 10) ? "0" + d.getDate() : d.getDate(),
+        year = d.getFullYear()
+
+    return `${year}-${month}-${day}` 
+}
+
 async function loadConfig() {
+    dateLimit.value = getDate()
     try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 
@@ -372,11 +384,11 @@ async function changeTimer(element) {
 
 async function hideShowWindow() {
 
-    const height = (await Neutralino.window.getSize()).height
+    const size = await Neutralino.window.getSize()
     const arrow = document.querySelector('.arrow')
 
-    if (height === 600) {
-        await Neutralino.window.setSize({ width: 450, height: 200 })
+    if (size.height === 600) {
+        await Neutralino.window.setSize({ width: size.width, height: 200 })
         streamLabsDiv.style.display = 'none'
         configDiv.style.display = 'none'
         controlsDiv.style.display = 'none'
@@ -384,7 +396,7 @@ async function hideShowWindow() {
         arrow.classList.add('down')
     }
     else {
-        await Neutralino.window.setSize({ width: 450, height: 600 })
+        await Neutralino.window.setSize({ width: size.width, height: 600 })
         streamLabsDiv.style.display = 'block'
         configDiv.style.display = 'flex'
         controlsDiv.style.display = 'block'
