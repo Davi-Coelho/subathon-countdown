@@ -257,3 +257,23 @@ input::-webkit-inner-spin-button {
     align-items: center;
     gap: 5px;
 }
+
+#edit-button {
+    color: white;
+    position: absolute;
+    right: 8%;
+    bottom: 53%;
+    height: 30x;
+    width: 30px;
+    padding: 5px;
+    cursor: pointer;
+    background: none;
+    background-color: #272727;
+    border: none;
+    transition: 0.3s;
+    border-radius: 15px;
+}
+
+#edit-button:hover {
+    background-color: #494949;
+}
