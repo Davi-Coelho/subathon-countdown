@@ -376,6 +376,16 @@ async function loadConfig() {
         }
     }
     catch (e) {
+        const now = new Date(new Date().getTime() + 3600000)
+        const hours = now.getHours() < 10 ? "0" + now.getHours() : now.getHours()
+        const minutes = now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()
+        const day = (now.getDate() < 10) ? "0" + now.getDate() : now.getDate()
+        const month = (now.getMonth() + 1) < 10 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1
+        const year = now.getFullYear()
+    
+        timeLimit.value = `${hours}:${minutes}`
+        dateLimit.value = `${year}-${month}-${day}`
+        updateTimeLeft()
         console.log(e)
     }
 }
