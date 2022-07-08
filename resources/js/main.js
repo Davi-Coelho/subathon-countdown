@@ -47,7 +47,7 @@ const editButton = document.querySelector('#edit-button')
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
 hideButton.onclick = hideShowWindow
-// editButton.onclick =
+editButton.onclick = editConfig
 timeLimit.oninput = updateTimeLeft
 dateLimit.oninput = updateTimeLeft
 maxTime.oninput = updateDeadEnd
@@ -92,8 +92,7 @@ async function startCountDown() {
                         await fetch(`https://api.exchangerate.host/latest?base=${event.currency}&amount=${event.amount}&symbols=BRL`)
                             .then(response => response.text())
                             .then(data => amount = (JSON.parse(data)).rates.BRL)
-                    }
-                    else {
+                    } else {
                         amount = event.amount
                     }
 
@@ -103,8 +102,7 @@ async function startCountDown() {
                     
                     if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.donateCounter) * 1000 * mult)) <= maxTimeValue) {
                         countDownDate += times * (parseFloat(inputs.donateCounter) * 1000 * mult)
-                    }
-                    else {
+                    } else {
                         countDownDate = maxTimeValue
                     }
                 }
@@ -116,8 +114,7 @@ async function startCountDown() {
 
                             if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
                                 countDownDate += parseFloat(inputs.subscriptionCounter) * 1000 * mult
-                            }
-                            else {
+                            } else {
                                 countDownDate = maxTimeValue
                             }
                             break
@@ -127,8 +124,7 @@ async function startCountDown() {
 
                             if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
                                 countDownDate += parseFloat(inputs.subscriptionCounter) * 1000 * mult
-                            }
-                            else {
+                            } else {
                                 countDownDate = maxTimeValue
                             }
                             break
@@ -139,16 +135,14 @@ async function startCountDown() {
                             
                             if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.bitsCounter) * 1000) * mult) <= maxTimeValue) {
                                 countDownDate += times * (parseFloat(inputs.bitsCounter) * 1000 * mult)
-                            }
-                            else {
+                            } else {
                                 countDownDate = maxTimeValue
                             }
                             break
                     }
                 }
             })
-        }
-        else {
+        } else {
             streamlabs.disconnect()
             pauseButton.value = 'Pausar'
             pauseButton.classList.remove('paused')
@@ -199,11 +193,13 @@ function switchMode(state) {
         startButton.value = 'Parar'
         startButton.classList.add('connected')
         pauseButton.removeAttribute('hidden')
+        editButton.removeAttribute('hidden')
 
     } else {
         startButton.value = 'Começar'
         startButton.classList.remove('connected')
         pauseButton.setAttribute('hidden', true)
+        editButton.setAttribute('hidden', true)
     }
 
     running = state
@@ -234,8 +230,7 @@ function pauseCountDown() {
         countDownDate = new Date().getTime() + timeLeft
         countDownWorker = new Worker('js/worker.js')
         countDownWorker.onmessage = countDownFunction
-    }
-    else {
+    } else {
         pause = true
         pauseButton.value = 'Resumir'
         pauseButton.classList.add('paused')
@@ -270,8 +265,7 @@ async function changeTimer(element) {
     if (pause || !running) {
         timeLeft += value
         updateTimer()
-    }
-    else {
+    } else {
         countDownDate += value
     }
 }
@@ -288,8 +282,7 @@ async function hideShowWindow() {
         controlsDiv.style.display = 'none'
         arrow.classList.remove('up')
         arrow.classList.add('down')
-    }
-    else {
+    } else {
         await Neutralino.window.setSize({ width: size.width, height: 600 })
         streamLabsDiv.style.display = 'block'
         configDiv.style.display = 'flex'
@@ -311,8 +304,7 @@ function updateTimeLeft() {
 function updateDeadEnd() {
     if (maxTime.value === '' || isNaN(parseFloat(maxTime.value))) {
         maxTime.value = ''
-    }
-    else {
+    } else {
         const now = new Date().getTime()
         const timeLeft = parseFloat(maxTime.value) * 60 * 60 * 1000
         const deadEnd = new Date(now + timeLeft)
@@ -356,7 +348,22 @@ async function saveData() {
     )
 }
 
+async function editConfig() {
+    if (edit) {
+        configDiv.style.border = '5px solid transparent'
+        maxTimeValue = new Date().getTime() + parseFloat(maxTime.value) * 60 * 60 * 1000
+        await saveData()
+        switchInputs(true)
+        edit = false
+    } else {
+        configDiv.style.border = '5px solid green'
+        switchInputs(false)
+        edit = true
+    }
+}
+
 async function loadConfig() {
+    editButton.setAttribute('hidden', true)
     try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 

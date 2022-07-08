@@ -94,16 +94,16 @@
                 <span class="label">Data Limite: </span>
                 <div class="limit-config">
                     <div>
-                        <input type="time" name="time-limit" id="time-limit" value="00:00">
-                        <input type="date" name="date-limit" id="date-limit" value="1970-01-01">
+                        <input type="number" name="max-time" id="max-time" value="0" min="0">
+                        <span>horas</span>
                         <label class="switch">
                             <input type="checkbox" name="enable-limit" id="enable-limit">
                             <span class="slider round"></span>
                         </label>
                     </div>
                     <div>
-                        <input type="number" name="max-time" id="max-time" value="0" min="0">
-                        <span>horas</span>
+                        <input type="time" name="time-limit" id="time-limit" value="00:00">
+                        <input type="date" name="date-limit" id="date-limit" value="1970-01-01">
                     </div>
                 </div>
             </div>
