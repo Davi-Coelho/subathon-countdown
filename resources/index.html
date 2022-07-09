@@ -54,7 +54,7 @@
             </div>
         </div>
         <div id="config">
-            <button id="edit-button"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button id="edit-button" hidden><i class="fa-solid fa-pen-to-square"></i></button>
             <div id="enable-button" class="counter-value">
                 <span class="label">Ativar: </span>
                 <label class="switch">
@@ -95,7 +95,7 @@
                 <span class="label">Data Limite: </span>
                 <div class="limit-config">
                     <div>
-                        <div id="max-time-div">
+                        <div id="max-time-div" hidden>
                             <input type="number" name="max-time" id="max-time" value="0" min="0">
                             <span>horas</span>
                         </div>
@@ -105,8 +105,8 @@
                         </label>
                     </div>
                     <div>
-                        <input type="time" name="time-limit" id="time-limit" value="00:00">
-                        <input type="date" name="date-limit" id="date-limit" value="1970-01-01">
+                        <input type="time" name="time-limit" id="time-limit" value="00:00" hidden>
+                        <input type="date" name="date-limit" id="date-limit" value="1970-01-01" hidden>
                     </div>
                 </div>
             </div>

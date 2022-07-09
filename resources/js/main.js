@@ -377,7 +377,6 @@ async function editConfig() {
 }
 
 async function loadConfig() {
-    editButton.setAttribute('hidden', true)
     try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 
@@ -412,6 +411,7 @@ async function loadConfig() {
         updateTimeLeft()
         console.log(e)
     }
+    showLimits()
 }
 
 function onWindowClose() {
