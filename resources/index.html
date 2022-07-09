@@ -90,12 +90,15 @@
                     <option value="2">Minutos</option>
                 </select>
             </div>
+            <span class="br"></span>
             <div id="limit-time" class="counter-value">
                 <span class="label">Data Limite: </span>
                 <div class="limit-config">
                     <div>
-                        <input type="number" name="max-time" id="max-time" value="0" min="0">
-                        <span>horas</span>
+                        <div id="max-time-div">
+                            <input type="number" name="max-time" id="max-time" value="0" min="0">
+                            <span>horas</span>
+                        </div>
                         <label class="switch">
                             <input type="checkbox" name="enable-limit" id="enable-limit">
                             <span class="slider round"></span>

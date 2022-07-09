@@ -38,6 +38,7 @@ const hoursLabel = document.getElementById('hours')
 const minutesLabel = document.getElementById('mins')
 const secondsLabel = document.getElementById('secs')
 const maxTime = document.querySelector('#max-time')
+const maxTimeDiv = document.querySelector('#max-time-div')
 const timeLimit = document.querySelector('#time-limit')
 const dateLimit = document.querySelector('#date-limit')
 const enableLimit = document.querySelector('#enable-limit')
@@ -51,6 +52,7 @@ editButton.onclick = editConfig
 timeLimit.oninput = updateTimeLeft
 dateLimit.oninput = updateTimeLeft
 maxTime.oninput = updateDeadEnd
+enableLimit.onclick = showLimits
 
 async function startCountDown() {
 
@@ -267,6 +269,18 @@ async function changeTimer(element) {
         updateTimer()
     } else {
         countDownDate += value
+    }
+}
+
+function showLimits() {
+    if (enableLimit.checked) {
+        maxTimeDiv.removeAttribute('hidden')
+        timeLimit.removeAttribute('hidden')
+        dateLimit.removeAttribute('hidden')
+    } else {
+        maxTimeDiv.setAttribute('hidden', true)
+        timeLimit.setAttribute('hidden', true)
+        dateLimit.setAttribute('hidden', true)
     }
 }
 

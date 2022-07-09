@@ -91,6 +91,13 @@ p {
     border-top-color: #999999;
 }
 
+#hours, #mins, #secs {
+    display: flex;
+    justify-content: center;
+    height: 107px;
+    width: 75px;
+}
+
 #config {
     display: flex;
     height: 225px;
@@ -277,4 +284,11 @@ input::-webkit-inner-spin-button {
 
 #edit-button:hover {
     background-color: #494949;
+}
+
+.br {
+    display: block;
+    height: 10px;
+    width: 100%;
+    border-bottom: 1px solid #e0e0e0;
 }
