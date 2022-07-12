@@ -31,6 +31,14 @@ p {
     cursor: default;
 }
 
+#bots {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+}
+
 #timer {
     font-size: 4.5em;
     display: flex;
@@ -128,8 +136,14 @@ p {
     margin: 0px 2px;
 }
 
-#socket {
-    width: 240px;
+#socket, #jwt {
+    width: 200px;
+}
+
+#streamlabs > span,
+#streamelements > span {
+    display: inline-block;
+    width: 130px;
 }
 
 input[type="number"] {
@@ -148,6 +162,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
+#jwt,
 #socket,
 input[type="number"],
 input[type="time"],
@@ -217,31 +232,6 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
-#hide-button {
-    position: absolute;
-    width: 27px;
-    height: 27px;
-    bottom: 1%;
-    right: 1%;
-}
-
-.arrow {
-    border: solid black;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-}
-
-.up {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
-}
-
-.down {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-}
-
 #limit-time {
     display: flex;
     flex-direction: row;
@@ -270,7 +260,7 @@ input::-webkit-inner-spin-button {
     color: white;
     position: absolute;
     right: 8%;
-    bottom: 53%;
+    bottom: 49%;
     height: 30x;
     width: 30px;
     padding: 5px;

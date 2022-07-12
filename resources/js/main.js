@@ -1,4 +1,5 @@
 let streamlabs = null
+let streamelements = null
 let countDownDate = null
 let timeLeft = 0
 let countDownWorker = null
@@ -22,6 +23,7 @@ const streamLabsDiv = document.querySelector('#streamlabs')
 const controlsDiv = document.querySelector('#controls')
 const configDiv = document.querySelector('#config')
 const socket = document.querySelector('#socket')
+const jwt = document.querySelector('#jwt')
 const startButton = document.querySelector('#start-button')
 const pauseButton = document.querySelector('#pause-button')
 const timer = document.querySelector('#timer')
@@ -42,12 +44,10 @@ const maxTimeDiv = document.querySelector('#max-time-div')
 const timeLimit = document.querySelector('#time-limit')
 const dateLimit = document.querySelector('#date-limit')
 const enableLimit = document.querySelector('#enable-limit')
-const hideButton = document.querySelector('#hide-button')
 const editButton = document.querySelector('#edit-button')
 
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
-hideButton.onclick = hideShowWindow
 editButton.onclick = editConfig
 timeLimit.oninput = updateTimeLeft
 dateLimit.oninput = updateTimeLeft
@@ -69,9 +69,11 @@ async function startCountDown() {
             countDownWorker = new Worker('js/worker.js')
             countDownWorker.onmessage = countDownFunction
             const socketToken = socket.value
+            const jwtValue = jwt.value
             saveData()
 
             streamlabs = io(`https://sockets.streamlabs.com?token=${socketToken}`, { transports: ['websocket'] })
+            streamelements = io('https://realtime.streamelements.com', {transports: ['websocket']});
 
             streamlabs.on('connect', () => {
                 switchMode(true)
@@ -206,6 +208,7 @@ function switchMode(state) {
 
     running = state
     socket.disabled = state
+    jwt.disabled = state
     switchInputs(state)
 }
 
@@ -284,29 +287,6 @@ function showLimits() {
     }
 }
 
-async function hideShowWindow() {
-
-    const size = await Neutralino.window.getSize()
-    const arrow = document.querySelector('.arrow')
-
-    if (size.height === 600) {
-        await Neutralino.window.setSize({ width: size.width, height: 200 })
-        streamLabsDiv.style.display = 'none'
-        configDiv.style.display = 'none'
-        controlsDiv.style.display = 'none'
-        arrow.classList.remove('up')
-        arrow.classList.add('down')
-    } else {
-        await Neutralino.window.setSize({ width: size.width, height: 600 })
-        streamLabsDiv.style.display = 'block'
-        configDiv.style.display = 'flex'
-        controlsDiv.style.display = 'block'
-        arrow.classList.remove('down')
-        arrow.classList.add('up')
-    }
-
-}
-
 function updateTimeLeft() {
     const now = new Date().getTime()
     const limit = new Date(`${dateLimit.value}T${timeLimit.value}`).getTime()
@@ -346,6 +326,7 @@ async function saveData() {
     await Neutralino.storage.setData('subathonConfig',
         JSON.stringify({
             socketToken: socket.value,
+            jwt: jwt.value,
             subscriptionSelect: subscriptionSelect.value,
             subscriptionCounter: subscriptionCounter.value,
             bitsValue: bitsValue.value,
@@ -382,6 +363,7 @@ async function loadConfig() {
 
         if (data) {
             socket.value = data.socketToken
+            jwt.value = data.jwt
             subscriptionSelect.value = data.subscriptionSelect
             subscriptionCounter.value = data.subscriptionCounter
             bitsValue.value = data.bitsValue

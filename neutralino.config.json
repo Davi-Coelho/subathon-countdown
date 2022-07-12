@@ -22,7 +22,7 @@
     "window": {
       "title": "Subathon Countdown",
       "width": 450,
-      "height": 600,
+      "height": 650,
       "fullScreen": false,
       "alwaysOnTop": false,
       "icon": "/resources/icons/appIcon.png",
