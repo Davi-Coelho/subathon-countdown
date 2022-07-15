@@ -1,4 +1,4 @@
-let streamlabs = null
+let streamelements = null
 let countDownDate = null
 let timeLeft = 0
 let countDownWorker = null
@@ -18,7 +18,7 @@ let inputs = {
     donateCounter: ''
 }
 
-const streamLabsDiv = document.querySelector('#streamlabs')
+const streamElementsDiv = document.querySelector('#streamelements')
 const controlsDiv = document.querySelector('#controls')
 const configDiv = document.querySelector('#config')
 const socket = document.querySelector('#socket')
@@ -42,12 +42,10 @@ const maxTimeDiv = document.querySelector('#max-time-div')
 const timeLimit = document.querySelector('#time-limit')
 const dateLimit = document.querySelector('#date-limit')
 const enableLimit = document.querySelector('#enable-limit')
-const hideButton = document.querySelector('#hide-button')
 const editButton = document.querySelector('#edit-button')
 
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
-hideButton.onclick = hideShowWindow
 editButton.onclick = editConfig
 timeLimit.oninput = updateTimeLeft
 dateLimit.oninput = updateTimeLeft
@@ -68,84 +66,19 @@ async function startCountDown() {
 
             countDownWorker = new Worker('js/worker.js')
             countDownWorker.onmessage = countDownFunction
-            const socketToken = socket.value
+            const jwtToken = socket.value
             saveData()
 
-            streamlabs = io(`https://sockets.streamlabs.com?token=${socketToken}`, { transports: ['websocket'] })
+            streamelements = io('https://realtime.streamelements.com', { transports: ['websocket'] });
 
-            streamlabs.on('connect', () => {
-                switchMode(true)
-            })
-
-            streamlabs.on('disconnect', () => {
-                switchMode(false)
-            })
-
-            streamlabs.on('event', async (eventData) => {
-
-                const event = eventData.message[0]
-                let mult = null
-
-                if (!eventData.for && eventData.type === 'donation' && enableCounter.checked && !pause) {
-                    let amount = 0
-
-                    if (event.currency !== 'BRL') {
-                        console.log('Convertendo...')
-                        await fetch(`https://api.exchangerate.host/latest?base=${event.currency}&amount=${event.amount}&symbols=BRL`)
-                            .then(response => response.text())
-                            .then(data => amount = (JSON.parse(data)).rates.BRL)
-                    } else {
-                        amount = event.amount
-                    }
-
-                    const times = amount / parseFloat(inputs.donateValue)
-                    await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.from} doou R$${amount}\n`)
-                    mult = inputs.donateSelect === '1' ? 1 : 60
-                    
-                    if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.donateCounter) * 1000 * mult)) <= maxTimeValue) {
-                        countDownDate += times * (parseFloat(inputs.donateCounter) * 1000 * mult)
-                    } else {
-                        countDownDate = maxTimeValue
-                    }
-                }
-                if (eventData.for === 'twitch_account' && enableCounter.checked && !pause) {
-                    switch (eventData.type) {
-                        case 'subscription':
-                            await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} se inscreveu.\n`)
-                            mult = inputs.subscriptionSelect === '1' ? 1 : 60
-
-                            if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
-                                countDownDate += parseFloat(inputs.subscriptionCounter) * 1000 * mult
-                            } else {
-                                countDownDate = maxTimeValue
-                            }
-                            break
-                        case 'resub':
-                            await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} se inscreveu.\n`)
-                            mult = inputs.subscriptionSelect === '1' ? 1 : 60
-
-                            if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
-                                countDownDate += parseFloat(inputs.subscriptionCounter) * 1000 * mult
-                            } else {
-                                countDownDate = maxTimeValue
-                            }
-                            break
-                        case 'bits':
-                            await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} doou ${event.amount} bits.\n`)
-                            const times = event.amount / parseFloat(inputs.bitsValue)
-                            mult = inputs.bitsSelect === '1' ? 1 : 60
-                            
-                            if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.bitsCounter) * 1000) * mult) <= maxTimeValue) {
-                                countDownDate += times * (parseFloat(inputs.bitsCounter) * 1000 * mult)
-                            } else {
-                                countDownDate = maxTimeValue
-                            }
-                            break
-                    }
-                }
-            })
+            streamelements.on('connect', () => { socketConnect(streamelements, jwtToken); });
+            streamelements.on('disconnect', () => { socketDisconnect(); });
+            streamelements.on('authenticated', (data) => { socketAuthenticated(data); });
+            streamelements.on('unauthorized', (data) => { socketUnauthorized(data); });
+            streamelements.on('event:test', (data) => { socketEvent(data); });
+            streamelements.on('event', (data) => { socketEvent(data); });
         } else {
-            streamlabs.disconnect()
+            streamelements.disconnect()
             pauseButton.value = 'Pausar'
             pauseButton.classList.remove('paused')
             pause = false
@@ -155,6 +88,90 @@ async function startCountDown() {
             countDownWorker.terminate()
             countDownWorker = undefined
             await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
+        }
+    }
+}
+
+function socketConnect(streamelements, jwtToken) {
+    console.log(`Connected, authenticating`)
+    streamelements.emit('authenticate', { method: 'jwt', token: jwtToken })
+}
+
+function socketDisconnect() {
+    console.log(`Disconnected`)
+    switchMode(false)
+}
+
+function socketAuthenticated(data) {
+
+    channelid = data.channelId
+    clientid = data.clientId
+
+    console.log(`Connected to ${channelid}`)
+    switchMode(true)
+}
+
+function socketUnauthorized(data) {
+    console.log(`Authentication failed - ${JSON.stringify(data)}`)
+}
+
+async function socketEvent(eventData) {
+    let listener = eventData.type
+    let event = eventData.data
+    let times = 0
+    // console.log(data)
+
+    if (enableCounter.checked && !pause) {
+        switch (listener) {
+            case 'tip':
+                console.log(event)
+
+                let amount = 0
+
+                if (event.currency !== 'BRL') {
+                    console.log('Convertendo...')
+                    await fetch(`https://api.exchangerate.host/latest?base=${event.currency}&amount=${event.amount}&symbols=BRL`)
+                        .then(response => response.text())
+                        .then(data => amount = (JSON.parse(data)).rates.BRL)
+                } else {
+                    amount = event.amount
+                }
+
+                times = amount / parseFloat(inputs.donateValue)
+                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} doou R$${amount}\n`)
+                mult = inputs.donateSelect === '1' ? 1 : 60
+
+                if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.donateCounter) * 1000 * mult)) <= maxTimeValue) {
+                    countDownDate += times * (parseFloat(inputs.donateCounter) * 1000 * mult)
+                } else {
+                    countDownDate = maxTimeValue
+                }
+                break
+            case 'subscriber':
+                console.log(event)
+                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} se inscreveu.\n`)
+                mult = inputs.subscriptionSelect === '1' ? 1 : 60
+
+                if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
+                    countDownDate += parseFloat(inputs.subscriptionCounter) * 1000 * mult
+                } else {
+                    countDownDate = maxTimeValue
+                }
+                break
+            case 'cheer':
+                console.log(event)
+                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} doou ${event.amount} bits.\n`)
+                times = event.amount / parseFloat(inputs.bitsValue)
+                mult = inputs.bitsSelect === '1' ? 1 : 60
+
+                if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.bitsCounter) * 1000) * mult) <= maxTimeValue) {
+                    countDownDate += times * (parseFloat(inputs.bitsCounter) * 1000 * mult)
+                } else {
+                    countDownDate = maxTimeValue
+                }
+                break
+            default:
+                break
         }
     }
 }
@@ -177,7 +194,7 @@ async function countDownFunction() {
     updateTimer()
 
     if (timeLeft < 0) {
-        streamlabs.disconnect()
+        streamelements.disconnect()
         pauseButton.value = 'Pausar'
         pauseButton.classList.remove('paused')
         pause = false
@@ -284,29 +301,6 @@ function showLimits() {
     }
 }
 
-async function hideShowWindow() {
-
-    const size = await Neutralino.window.getSize()
-    const arrow = document.querySelector('.arrow')
-
-    if (size.height === 600) {
-        await Neutralino.window.setSize({ width: size.width, height: 200 })
-        streamLabsDiv.style.display = 'none'
-        configDiv.style.display = 'none'
-        controlsDiv.style.display = 'none'
-        arrow.classList.remove('up')
-        arrow.classList.add('down')
-    } else {
-        await Neutralino.window.setSize({ width: size.width, height: 600 })
-        streamLabsDiv.style.display = 'block'
-        configDiv.style.display = 'flex'
-        controlsDiv.style.display = 'block'
-        arrow.classList.remove('down')
-        arrow.classList.add('up')
-    }
-
-}
-
 function updateTimeLeft() {
     const now = new Date().getTime()
     const limit = new Date(`${dateLimit.value}T${timeLimit.value}`).getTime()
@@ -327,7 +321,7 @@ function updateDeadEnd() {
         const day = (deadEnd.getDate() < 10) ? "0" + deadEnd.getDate() : deadEnd.getDate()
         const month = (deadEnd.getMonth() + 1) < 10 ? "0" + (deadEnd.getMonth() + 1) : deadEnd.getMonth() + 1
         const year = deadEnd.getFullYear()
-    
+
         timeLimit.value = `${hours}:${minutes}`
         dateLimit.value = `${year}-${month}-${day}`
     }
@@ -405,7 +399,7 @@ async function loadConfig() {
         const day = (now.getDate() < 10) ? "0" + now.getDate() : now.getDate()
         const month = (now.getMonth() + 1) < 10 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1
         const year = now.getFullYear()
-    
+
         timeLimit.value = `${hours}:${minutes}`
         dateLimit.value = `${year}-${month}-${day}`
         updateTimeLeft()
