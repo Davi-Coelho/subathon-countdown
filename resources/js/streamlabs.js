@@ -1,10 +1,8 @@
 function streamlabsConnect() {
-    console.log('teste')
     document.dispatchEvent(new Event('streamlabsConnected'))
 }
 
 function streamlabsDisconnect() {
-    console.log('teste2')
     document.dispatchEvent(new Event('streamlabsDisconnected'))
 }
 
@@ -12,6 +10,7 @@ async function streamlabsEvent(eventData) {
 
     const event = eventData.message[0]
     let mult = null
+    console.log(eventData)
 
     if (!eventData.for && eventData.type === 'donation' && enableCounter.checked && !pause) {
         let amount = 0
@@ -35,7 +34,7 @@ async function streamlabsEvent(eventData) {
             countDownDate = maxTimeValue
         }
     }
-    if (eventData.for === 'twitch_account' && enableCounter.checked && !pause) {
+    if (eventData.for === 'twitch_account' && enableCounter.checked && !pause && (socketCheck.checked || !jwtCheck.checked)) {
         switch (eventData.type) {
             case 'subscription':
                 await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} se inscreveu.\n`)

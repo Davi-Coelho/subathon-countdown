@@ -63,7 +63,7 @@ document.addEventListener('streamelementsDisconnected', (e) => initTimer(e))
 
 async function startCountDown() {
 
-    if ((!socketCheck.checked || socket.value !== '') && 
+    if ((!socketCheck.checked || socket.value !== '') &&
         (socketCheck.checked || jwtCheck.checked) &&
         (!jwtCheck.checked || jwt.value !== '')) {
 
@@ -72,7 +72,6 @@ async function startCountDown() {
             if (socketCheck.checked) {
                 const socketToken = socket.value
 
-                console.log(socketToken)
                 streamlabs = io(`https://sockets.streamlabs.com?token=${socketToken}`, { transports: ['websocket'] })
 
                 streamlabs.on('connect', () => { streamlabsConnect() })
@@ -83,7 +82,6 @@ async function startCountDown() {
             if (jwtCheck.checked) {
                 const jwtToken = jwt.value
 
-                console.log(jwtToken)
                 streamelements = io('https://realtime.streamelements.com', { transports: ['websocket'] })
 
                 streamelements.on('connect', () => { streamelementsConnect(streamelements, jwtToken) })
@@ -172,8 +170,13 @@ async function switchMode(state) {
         editButton.removeAttribute('hidden')
 
     } else {
-        streamlabs.disconnect()
-        streamelements.disconnect()
+
+        if (socketCheck.checked) {
+            streamlabs.disconnect()
+        }
+        if (jwtCheck.checked) {
+            streamelements.disconnect()
+        }
         startButton.value = 'Começar'
         startButton.classList.remove('connected')
         pauseButton.setAttribute('hidden', true)
@@ -191,6 +194,8 @@ async function switchMode(state) {
     running = state
     socket.disabled = state
     jwt.disabled = state
+    socketCheck.disabled = state
+    jwtCheck.disabled = state
     switchInputs(state)
 }
 
@@ -289,7 +294,7 @@ function updateDeadEnd() {
         const day = (deadEnd.getDate() < 10) ? "0" + deadEnd.getDate() : deadEnd.getDate()
         const month = (deadEnd.getMonth() + 1) < 10 ? "0" + (deadEnd.getMonth() + 1) : deadEnd.getMonth() + 1
         const year = deadEnd.getFullYear()
-    
+
         timeLimit.value = `${hours}:${minutes}`
         dateLimit.value = `${year}-${month}-${day}`
     }
@@ -373,7 +378,7 @@ async function loadConfig() {
         const day = (now.getDate() < 10) ? "0" + now.getDate() : now.getDate()
         const month = (now.getMonth() + 1) < 10 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1
         const year = now.getFullYear()
-    
+
         timeLimit.value = `${hours}:${minutes}`
         dateLimit.value = `${year}-${month}-${day}`
         updateTimeLeft()

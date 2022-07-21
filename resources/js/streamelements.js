@@ -25,11 +25,11 @@ async function streamelementsEvent(eventData) {
     let listener = eventData.type
     let event = eventData.data
     let times = 0
+    console.log(eventData)
 
-    if (enableCounter.checked && !pause) {
+    if (enableCounter.checked && !pause && (!socketCheck.checked || !jwtCheck.checked || listener === 'tip')) {
         switch (listener) {
             case 'tip':
-                console.log(event)
 
                 let amount = 0
 
@@ -53,7 +53,6 @@ async function streamelementsEvent(eventData) {
                 }
                 break
             case 'subscriber':
-                console.log(event)
                 await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} se inscreveu.\n`)
                 mult = inputs.subscriptionSelect === '1' ? 1 : 60
 
@@ -64,7 +63,6 @@ async function streamelementsEvent(eventData) {
                 }
                 break
             case 'cheer':
-                console.log(event)
                 await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} doou ${event.amount} bits.\n`)
                 times = event.amount / parseFloat(inputs.bitsValue)
                 mult = inputs.bitsSelect === '1' ? 1 : 60
