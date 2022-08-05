@@ -33,6 +33,7 @@ async function streamlabsEvent(eventData) {
         } else {
             countDownDate = maxTimeValue
         }
+        updateWebTimer('update', countDownDate, true)
     }
     if (eventData.for === 'twitch_account' && enableCounter.checked && !pause && (socketCheck.checked || !jwtCheck.checked)) {
         switch (eventData.type) {
@@ -68,5 +69,6 @@ async function streamlabsEvent(eventData) {
                 }
                 break
         }
+        updateWebTimer('update', countDownDate, true)
     }
 }

@@ -136,7 +136,11 @@ p {
     margin: 0px 2px;
 }
 
-#socket, #jwt {
+#channel {
+    align-self: flex-start;
+}
+
+#socket, #jwt, #channel {
     width: 200px;
 }
 
@@ -164,6 +168,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 #jwt,
 #socket,
+#channel,
 input[type="number"],
 input[type="time"],
 input[type="date"] {

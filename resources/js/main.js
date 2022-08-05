@@ -20,6 +20,7 @@ let inputs = {
     donateCounter: ''
 }
 
+const channel = document.querySelector('#channel')
 const socketCheck = document.querySelector('#socket-check')
 const jwtCheck = document.querySelector('#jwt-check')
 const controlsDiv = document.querySelector('#controls')
@@ -130,6 +131,28 @@ function initTimer(e) {
     }
 }
 
+function updateWebTimer(type, countDownDate, running) {
+    var myHeaders = new Headers()
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded")
+
+    var urlencoded = new URLSearchParams()
+    urlencoded.append("type", type)
+    urlencoded.append("finalDate", countDownDate)
+    urlencoded.append("running", running)
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: urlencoded,
+        mode: 'no-cors'
+    }
+
+    fetch(`https://davicoelho.com.br/subathon/timer/${channel.value}`, requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error))
+}
+
 async function updateTimer() {
     const hours = Math.floor(timeLeft / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
@@ -168,6 +191,7 @@ async function switchMode(state) {
         startButton.classList.add('connected')
         pauseButton.removeAttribute('hidden')
         editButton.removeAttribute('hidden')
+        updateWebTimer('start', countDownDate, true)
 
     } else {
 
@@ -186,12 +210,14 @@ async function switchMode(state) {
         pause = false
         timeLeft = 0
         updateTimer()
+        updateWebTimer('stop', 0, false)
         countDownWorker.terminate()
         countDownWorker = undefined
         await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
     }
 
     running = state
+    channel.disabled = state
     socket.disabled = state
     jwt.disabled = state
     socketCheck.disabled = state
@@ -222,12 +248,14 @@ function pauseCountDown() {
         countDownDate = new Date().getTime() + timeLeft
         countDownWorker = new Worker('js/worker.js')
         countDownWorker.onmessage = countDownFunction
+        updateWebTimer('resume', countDownDate, true)
     } else {
         pause = true
         pauseButton.value = 'Resumir'
         pauseButton.classList.add('paused')
         countDownWorker.terminate()
         countDownWorker = undefined
+        updateWebTimer('pause', countDownDate, false)
     }
 }
 
@@ -259,6 +287,7 @@ async function changeTimer(element) {
         updateTimer()
     } else {
         countDownDate += value
+        updateWebTimer('update', countDownDate, true)
     }
 }
 
@@ -312,6 +341,7 @@ async function saveData() {
 
     await Neutralino.storage.setData('subathonConfig',
         JSON.stringify({
+            channel: channel.value,
             socketCheck: socketCheck.checked,
             jwtCheck: jwtCheck.checked,
             socketToken: socket.value,
@@ -351,6 +381,7 @@ async function loadConfig() {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 
         if (data) {
+            channel.value = data.channel
             socketCheck.checked = data.socketCheck
             jwtCheck.checked = data.jwtCheck
             socket.value = data.socketToken
