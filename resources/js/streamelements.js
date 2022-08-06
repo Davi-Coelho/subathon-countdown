@@ -27,10 +27,9 @@ async function streamelementsEvent(eventData) {
     let times = 0
     console.log(eventData)
 
-    if (enableCounter.checked && !pause && (!socketCheck.checked || !jwtCheck.checked || listener === 'tip')) {
+    if (enableCounter.checked && !pause && (!socketCheck.checked || !jwtCheck.checked || listener === 'tip') && !limitReached) {
         switch (listener) {
             case 'tip':
-
                 let amount = 0
 
                 if (event.currency !== 'BRL') {
@@ -49,7 +48,11 @@ async function streamelementsEvent(eventData) {
                 if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.donateCounter) * 1000 * mult)) <= maxTimeValue) {
                     countDownDate += times * (parseFloat(inputs.donateCounter) * 1000 * mult)
                 } else {
+                    limitReached = true
                     countDownDate = maxTimeValue
+                }
+                if (channelCheck.checked) {
+                    updateWebTimer('update', countDownDate, running)
                 }
                 break
             case 'subscriber':
@@ -59,7 +62,11 @@ async function streamelementsEvent(eventData) {
                 if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
                     countDownDate += parseFloat(inputs.subscriptionCounter) * 1000 * mult
                 } else {
+                    limitReached = true
                     countDownDate = maxTimeValue
+                }
+                if (channelCheck.checked) {
+                    updateWebTimer('update', countDownDate, running)
                 }
                 break
             case 'cheer':
@@ -70,7 +77,11 @@ async function streamelementsEvent(eventData) {
                 if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.bitsCounter) * 1000) * mult) <= maxTimeValue) {
                     countDownDate += times * (parseFloat(inputs.bitsCounter) * 1000 * mult)
                 } else {
+                    limitReached = true
                     countDownDate = maxTimeValue
+                }
+                if (channelCheck.checked) {
+                    updateWebTimer('update', countDownDate, running)
                 }
                 break
             default:

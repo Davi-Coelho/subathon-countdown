@@ -11,11 +11,12 @@
 
 <body>
     <div id="neutralinoapp">
-        <div id="channelInfo">
-            <span>Channel: </span>
-            <input type="text" name="channel" id="channel">
-        </div>
         <div id="bots">
+            <div id="channelInfo">
+                <input type="checkbox" name="ws-check" id="ws-check" />
+                <span>Canal da Twitch: </span>
+                <input type="text" name="channel" id="channel">
+            </div>
             <div id="streamlabs">
                 <input type="checkbox" name="socket-check" id="socket-check" />
                 <span>Streamlabs Socket: </span>
@@ -65,7 +66,7 @@
             </div>
         </div>
         <div id="config">
-            <button id="edit-button" hidden><i class="fa-solid fa-pen-to-square"></i></button>
+            <button id="edit-button"><i class="fa-solid fa-pen-to-square"></i></button>
             <div id="enable-button" class="counter-value">
                 <span class="label">Ativar: </span>
                 <label class="switch">

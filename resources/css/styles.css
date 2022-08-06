@@ -144,6 +144,7 @@ p {
     width: 200px;
 }
 
+#channelInfo > span,
 #streamlabs > span,
 #streamelements > span {
     display: inline-block;
@@ -265,7 +266,7 @@ input::-webkit-inner-spin-button {
     color: white;
     position: absolute;
     right: 8%;
-    bottom: 49%;
+    bottom: 47%;
     height: 30x;
     width: 30px;
     padding: 5px;

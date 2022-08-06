@@ -8,6 +8,7 @@ let pause = false
 let edit = false
 let waiting = false
 let maxTimeValue = 0
+let limitReached = false
 let currentLogFile = ''
 let inputs = {
     subscriptionCounter: '',
@@ -20,6 +21,7 @@ let inputs = {
     donateCounter: ''
 }
 
+const channelCheck = document.querySelector('#ws-check')
 const channel = document.querySelector('#channel')
 const socketCheck = document.querySelector('#socket-check')
 const jwtCheck = document.querySelector('#jwt-check')
@@ -131,14 +133,14 @@ function initTimer(e) {
     }
 }
 
-function updateWebTimer(type, countDownDate, running) {
+function updateWebTimer(type, countDownDate, isRunning) {
     var myHeaders = new Headers()
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded")
 
     var urlencoded = new URLSearchParams()
     urlencoded.append("type", type)
     urlencoded.append("finalDate", countDownDate)
-    urlencoded.append("running", running)
+    urlencoded.append("running", isRunning)
 
     var requestOptions = {
         method: 'POST',
@@ -191,7 +193,10 @@ async function switchMode(state) {
         startButton.classList.add('connected')
         pauseButton.removeAttribute('hidden')
         editButton.removeAttribute('hidden')
-        updateWebTimer('start', countDownDate, true)
+
+        if (channelCheck.checked) {
+            updateWebTimer('start', countDownDate, state)
+        }
 
     } else {
 
@@ -208,9 +213,12 @@ async function switchMode(state) {
         pauseButton.value = 'Pausar'
         pauseButton.classList.remove('paused')
         pause = false
+        limitReached = false
         timeLeft = 0
         updateTimer()
-        updateWebTimer('stop', 0, false)
+        if (channelCheck.checked) {
+            updateWebTimer('stop', 0, state)
+        }
         countDownWorker.terminate()
         countDownWorker = undefined
         await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
@@ -220,6 +228,7 @@ async function switchMode(state) {
     channel.disabled = state
     socket.disabled = state
     jwt.disabled = state
+    channelCheck.disabled = state
     socketCheck.disabled = state
     jwtCheck.disabled = state
     switchInputs(state)
@@ -241,6 +250,10 @@ function switchInputs(state) {
 }
 
 function pauseCountDown() {
+    if (channelCheck.checked) {
+        updateWebTimer(pause ? 'resume' : 'pause', countDownDate, pause)
+    }
+
     if (pause) {
         pause = false
         pauseButton.value = 'Pausar'
@@ -248,14 +261,12 @@ function pauseCountDown() {
         countDownDate = new Date().getTime() + timeLeft
         countDownWorker = new Worker('js/worker.js')
         countDownWorker.onmessage = countDownFunction
-        updateWebTimer('resume', countDownDate, true)
     } else {
         pause = true
         pauseButton.value = 'Resumir'
         pauseButton.classList.add('paused')
         countDownWorker.terminate()
         countDownWorker = undefined
-        updateWebTimer('pause', countDownDate, false)
     }
 }
 
@@ -285,9 +296,15 @@ async function changeTimer(element) {
     if (pause || !running) {
         timeLeft += value
         updateTimer()
+        if (channelCheck.checked) {
+            const now = new Date().getTime() + 1000
+            updateWebTimer('update', now + timeLeft, running)
+        }
     } else {
         countDownDate += value
-        updateWebTimer('update', countDownDate, true)
+        if (channelCheck.checked) {
+            updateWebTimer('update', countDownDate, running)
+        }
     }
 }
 
@@ -341,6 +358,7 @@ async function saveData() {
 
     await Neutralino.storage.setData('subathonConfig',
         JSON.stringify({
+            channelCheck: channelCheck.checked,
             channel: channel.value,
             socketCheck: socketCheck.checked,
             jwtCheck: jwtCheck.checked,
@@ -363,16 +381,18 @@ async function saveData() {
 }
 
 async function editConfig() {
-    if (edit) {
-        configDiv.style.border = '5px solid transparent'
-        maxTimeValue = new Date().getTime() + parseFloat(maxTime.value) * 60 * 60 * 1000
-        await saveData()
-        switchInputs(true)
-        edit = false
-    } else {
-        configDiv.style.border = '5px solid green'
-        switchInputs(false)
-        edit = true
+    if (running) {
+        if (edit) {
+            configDiv.style.border = '5px solid transparent'
+            maxTimeValue = new Date().getTime() + parseFloat(maxTime.value) * 60 * 60 * 1000
+            await saveData()
+            switchInputs(true)
+            edit = false
+        } else {
+            configDiv.style.border = '5px solid green'
+            switchInputs(false)
+            edit = true
+        }
     }
 }
 
@@ -381,6 +401,7 @@ async function loadConfig() {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 
         if (data) {
+            channelCheck.checked = data.channelCheck
             channel.value = data.channel
             socketCheck.checked = data.socketCheck
             jwtCheck.checked = data.jwtCheck
