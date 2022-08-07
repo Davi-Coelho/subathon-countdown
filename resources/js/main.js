@@ -219,8 +219,11 @@ async function switchMode(state) {
         if (channelCheck.checked) {
             updateWebTimer('stop', 0, state)
         }
-        countDownWorker.terminate()
-        countDownWorker = undefined
+
+        if (countDownWorker) {
+            countDownWorker.terminate()
+            countDownWorker = undefined
+        }
         await Neutralino.filesystem.writeFile('./timer.txt', "00:00:00")
     }
 

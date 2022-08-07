@@ -27,7 +27,7 @@ async function streamelementsEvent(eventData) {
     let times = 0
     console.log(eventData)
 
-    if (enableCounter.checked && !pause && (!socketCheck.checked || !jwtCheck.checked || listener === 'tip') && !limitReached) {
+    if (enableCounter.checked && (!socketCheck.checked || !jwtCheck.checked || listener === 'tip') && !limitReached) {
         switch (listener) {
             case 'tip':
                 let amount = 0
@@ -51,6 +51,11 @@ async function streamelementsEvent(eventData) {
                     limitReached = true
                     countDownDate = maxTimeValue
                 }
+
+                if (pause) {
+                    await countDownFunction()
+                }
+
                 if (channelCheck.checked) {
                     updateWebTimer('update', countDownDate, running)
                 }
@@ -65,6 +70,11 @@ async function streamelementsEvent(eventData) {
                     limitReached = true
                     countDownDate = maxTimeValue
                 }
+
+                if (pause) {
+                    await countDownFunction()
+                }
+
                 if (channelCheck.checked) {
                     updateWebTimer('update', countDownDate, running)
                 }
@@ -80,6 +90,11 @@ async function streamelementsEvent(eventData) {
                     limitReached = true
                     countDownDate = maxTimeValue
                 }
+
+                if (pause) {
+                    await countDownFunction()
+                }
+
                 if (channelCheck.checked) {
                     updateWebTimer('update', countDownDate, running)
                 }
