@@ -253,9 +253,6 @@ function switchInputs(state) {
 }
 
 function pauseCountDown() {
-    if (channelCheck.checked) {
-        updateWebTimer(pause ? 'resume' : 'pause', countDownDate, pause)
-    }
 
     if (pause) {
         pause = false
@@ -264,12 +261,18 @@ function pauseCountDown() {
         countDownDate = new Date().getTime() + timeLeft
         countDownWorker = new Worker('js/worker.js')
         countDownWorker.onmessage = countDownFunction
+        if (channelCheck.checked) {
+            updateWebTimer('resume', countDownDate, pause)
+        }
     } else {
         pause = true
         pauseButton.value = 'Resumir'
         pauseButton.classList.add('paused')
         countDownWorker.terminate()
         countDownWorker = undefined
+        if (channelCheck.checked) {
+            updateWebTimer('pause', countDownDate, pause)
+        }
     }
 }
 
