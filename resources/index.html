@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -14,17 +14,17 @@
         <div id="bots">
             <div id="channelInfo">
                 <input type="checkbox" name="ws-check" id="ws-check" />
-                <span>Canal da Twitch: </span>
+                <label for="channel">Canal da Twitch: </label>
                 <input type="text" name="channel" id="channel">
             </div>
             <div id="streamlabs">
                 <input type="checkbox" name="socket-check" id="socket-check" />
-                <span>Streamlabs Socket: </span>
+                <label for="socket">Streamlabs Socket: </label>
                 <input type="password" name="socket" id="socket">
             </div>
             <div id="streamelements">
                 <input type="checkbox" name="jwt-check" id="jwt-check" />
-                <span>StreamElements JWT: </span>
+                <label for="jwt">StreamElements JWT: </label>
                 <input type="password" name="jwt" id="jwt">
             </div>
         </div>
@@ -68,14 +68,14 @@
         <div id="config">
             <button id="edit-button"><i class="fa-solid fa-pen-to-square"></i></button>
             <div id="enable-button" class="counter-value">
-                <span class="label">Ativar: </span>
+                <label for="enable-counter" class="label">Ativar: </label>
                 <label class="switch">
                     <input type="checkbox" name="enable-counter" id="enable-counter">
                     <span class="slider round"></span>
                 </label>
             </div>
             <div id="subscription" class="counter-value">
-                <span class="label">Subscription: </span>
+                <label for="subscription-counter" class="label">Subscription: </label>
                 <input type="number" name="subscription-counter" id="subscription-counter" value="0" min="0">
                 <select name="subscription-select" id="subscription-select">
                     <option value="1" selected>Segundos</option>
@@ -83,9 +83,9 @@
                 </select>
             </div>
             <div id="bits" class="counter-value">
-                <span class="label">Bits: </span>
+                <label for="bits-value" class="label">Bits: </label>
                 <input type="number" name="bits-value" id="bits-value" value="1" min="1">
-                <span>p/ cada</span>
+                <label for="bits-counter">p/ cada</label>
                 <input type="number" name="bits-counter" id="bits-counter" value="0" min="0">
                 <select name="bits-select" id="bits-select">
                     <option value="1" selected>Segundos</option>
@@ -93,9 +93,9 @@
                 </select>
             </div>
             <div id="donate" class="counter-value">
-                <span class="label">Donate (R$): </span>
+                <label for="donate-value" class="label">Donate (R$): </label>
                 <input type="number" name="donate-value" id="donate-value" value="1" min="1">
-                <span>p/ cada</span>
+                <label for="donate-counter">p/ cada</label>
                 <input type="number" name="donate-counter" id="donate-counter" value="0" min="0">
                 <select name="donate-select" id="donate-select">
                     <option value="1" selected>Segundos</option>
@@ -104,16 +104,16 @@
             </div>
             <span class="br"></span>
             <div id="limit-time" class="counter-value">
-                <span class="label">Data Limite: </span>
+                <label for="enable-limit" class="label">Data Limite: </label>
                 <div class="limit-config">
                     <div>
                         <div id="max-time-div" hidden>
                             <input type="number" name="max-time" id="max-time" value="0" min="0">
-                            <span>horas</span>
+                            <label for="max-time">horas</label>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="enable-limit" id="enable-limit">
-                            <span class="slider round"></span>
+                            <label for="enable-limit" class="slider round"></label>
                         </label>
                     </div>
                     <div>

@@ -15,7 +15,7 @@ body {
 p {
     display: inline;
     font-size: 40px;
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 #neutralinoapp {
@@ -69,25 +69,19 @@ p {
 
 .upper-buttons>input[type="button"] {
     background-color: transparent;
-    width: 0px;
-    height: 0px;
-    border: 12px solid black;
-    border-top-color: transparent;
-    border-right-color: transparent;
+    width: 0;
+    height: 0;
+    border: 12px solid transparent;
     border-bottom-color: #494949;
-    border-left-color: transparent;
     padding: 0;
 }
 
 .lower-buttons>input[type="button"] {
     background-color: transparent;
-    width: 0px;
-    height: 0px;
-    border: 12px solid black;
+    width: 0;
+    height: 0;
+    border: 12px solid transparent;
     border-top-color: #494949;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
     padding: 0;
 }
 
@@ -131,9 +125,9 @@ p {
     width: 90px;
 }
 
-.counter-value>span {
+.counter-value>label {
     display: inline-block;
-    margin: 0px 2px;
+    margin: 0 2px;
 }
 
 #channel {
@@ -144,9 +138,9 @@ p {
     width: 200px;
 }
 
-#channelInfo > span,
-#streamlabs > span,
-#streamelements > span {
+#channelInfo > label,
+#streamlabs > label,
+#streamelements > label {
     display: inline-block;
     width: 130px;
 }
@@ -267,12 +261,11 @@ input::-webkit-inner-spin-button {
     position: absolute;
     right: 8%;
     bottom: 47%;
-    height: 30x;
+    height: 30px;
     width: 30px;
     padding: 5px;
     cursor: pointer;
-    background: none;
-    background-color: #272727;
+    background: #272727 none;
     border: none;
     transition: 0.3s;
     border-radius: 15px;
