@@ -25,13 +25,11 @@ const channelCheck = document.querySelector('#ws-check')
 const channel = document.querySelector('#channel')
 const socketCheck = document.querySelector('#socket-check')
 const jwtCheck = document.querySelector('#jwt-check')
-const controlsDiv = document.querySelector('#controls')
 const configDiv = document.querySelector('#config')
 const socket = document.querySelector('#socket')
 const jwt = document.querySelector('#jwt')
 const startButton = document.querySelector('#start-button')
 const pauseButton = document.querySelector('#pause-button')
-const timer = document.querySelector('#timer')
 const subscriptionSelect = document.querySelector('#subscription-select')
 const subscriptionCounter = document.querySelector('#subscription-counter')
 const bitsValue = document.querySelector('#bits-value')
@@ -95,37 +93,37 @@ async function startCountDown() {
                 streamelements.on('event', (data) => { streamelementsEvent(data) })
             }
         } else {
-            switchMode(false)
+            await switchMode(false)
         }
     }
 }
 
-function initTimer(e) {
+async function initTimer(e) {
     const event = e.type
     console.log(event)
     switch (event) {
         case 'streamlabsConnected':
             if (waiting) {
-                switchMode(true)
+                await switchMode(true)
                 waiting = false
             } else {
                 if (jwtCheck.checked) {
                     waiting = true
                 } else {
-                    switchMode(true)
+                    await switchMode(true)
                     waiting = false
                 }
             }
             break
         case 'streamelementsConnected':
             if (waiting) {
-                switchMode(true)
+                await switchMode(true)
                 waiting = false
             } else {
                 if (socketCheck.checked) {
                     waiting = true
                 } else {
-                    switchMode(true)
+                    await switchMode(true)
                     waiting = false
                 }
             }
@@ -134,15 +132,15 @@ function initTimer(e) {
 }
 
 function updateWebTimer(type, countDownDate, isRunning) {
-    var myHeaders = new Headers()
+    const myHeaders = new Headers()
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded")
 
-    var urlencoded = new URLSearchParams()
+    const urlencoded = new URLSearchParams()
     urlencoded.append("type", type)
     urlencoded.append("finalDate", countDownDate)
     urlencoded.append("running", isRunning)
 
-    var requestOptions = {
+    const requestOptions = {
         method: 'POST',
         headers: myHeaders,
         body: urlencoded,
@@ -156,9 +154,9 @@ function updateWebTimer(type, countDownDate, isRunning) {
 }
 
 async function updateTimer() {
-    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    const hours = Math.floor(timeLeft / (1000 * 60 * 60))
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000)
 
     hoursLabel.innerHTML = hours >= 10 ? hours : "0" + hours
     minutesLabel.innerHTML = minutes >= 10 ? minutes : "0" + minutes
@@ -167,19 +165,19 @@ async function updateTimer() {
 }
 
 async function countDownFunction() {
-    const now = new Date().getTime();
-    timeLeft = countDownDate - now;
+    const now = new Date().getTime()
+    timeLeft = countDownDate - now
 
-    updateTimer()
+    await updateTimer()
 
     if (timeLeft < 0) {
-        switchMode(false)
+        await switchMode(false)
     }
 }
 
 async function switchMode(state) {
     if (state) {
-        saveData()
+        await saveData()
         currentLogFile = new Date().toLocaleString('pt-BR').replace(/\//g, '-').replace(/:/g, '_')
         await Neutralino.filesystem.writeFile(`./resumo ${currentLogFile}.txt`, "")
 
@@ -208,14 +206,14 @@ async function switchMode(state) {
         }
         startButton.value = 'Começar'
         startButton.classList.remove('connected')
-        pauseButton.setAttribute('hidden', true)
-        editButton.setAttribute('hidden', true)
+        pauseButton.setAttribute('hidden', "true")
+        editButton.setAttribute('hidden', "true")
         pauseButton.value = 'Pausar'
         pauseButton.classList.remove('paused')
         pause = false
         limitReached = false
         timeLeft = 0
-        updateTimer()
+        await updateTimer()
         if (channelCheck.checked) {
             updateWebTimer('stop', 0, state)
         }
@@ -301,7 +299,7 @@ async function changeTimer(element) {
 
     if (pause || !running) {
         timeLeft += value
-        updateTimer()
+        await updateTimer()
         if (channelCheck.checked) {
             const now = new Date().getTime() + 1000
             updateWebTimer('update', now + timeLeft, running)
@@ -320,9 +318,9 @@ function showLimits() {
         timeLimit.removeAttribute('hidden')
         dateLimit.removeAttribute('hidden')
     } else {
-        maxTimeDiv.setAttribute('hidden', true)
-        timeLimit.setAttribute('hidden', true)
-        dateLimit.setAttribute('hidden', true)
+        maxTimeDiv.setAttribute('hidden', "true")
+        timeLimit.setAttribute('hidden', "true")
+        dateLimit.setAttribute('hidden', "true")
     }
 }
 
@@ -445,10 +443,13 @@ async function loadConfig() {
     showLimits()
 }
 
-function onWindowClose() {
-    Neutralino.app.exit()
+async function onWindowClose() {
+    await Neutralino.app.exit(0)
 }
 
 Neutralino.init()
 Neutralino.events.on('windowClose', onWindowClose)
 loadConfig()
+    .then(() => {
+        console.log("Configurações carregadas!")
+    })
