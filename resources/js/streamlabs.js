@@ -16,7 +16,6 @@ async function streamlabsEvent(eventData) {
         let amount = 0
 
         if (event.currency !== 'BRL') {
-            console.log('Convertendo...')
             await fetch(`https://api.exchangerate.host/latest?base=${event.currency}&amount=${event.amount}&symbols=BRL`)
                 .then(response => response.text())
                 .then(data => amount = (JSON.parse(data)).rates.BRL)

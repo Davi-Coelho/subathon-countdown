@@ -1,19 +1,12 @@
 function streamelementsConnect(streamelements, jwtToken) {
-    console.log(`Connected, authenticating`)
     streamelements.emit('authenticate', { method: 'jwt', token: jwtToken })
 }
 
 function streamelementsDisconnect() {
-    console.log(`Disconnected`)
     document.dispatchEvent(new Event('streamelementsDisconnected'))
 }
 
 function streamelementsAuthenticated(data) {
-
-    channelid = data.channelId
-    clientid = data.clientId
-
-    console.log(`Connected to ${channelid}`)
     document.dispatchEvent(new Event('streamelementsConnected'))
 }
 
@@ -25,6 +18,7 @@ async function streamelementsEvent(eventData) {
     let listener = eventData.type
     let event = eventData.data
     let times = 0
+    let mult = 0
     console.log(eventData)
 
     if (enableCounter.checked && (!socketCheck.checked || !jwtCheck.checked || listener === 'tip') && !limitReached) {
