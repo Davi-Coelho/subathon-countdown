@@ -10,3 +10,5 @@
 .tmp/
 timer.txt
 resumo *.txt
+
+/.idea
