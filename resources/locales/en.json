@@ -1,0 +1,17 @@
+{
+  "channel": "Twitch Channel:",
+  "enable-counter": "Enable:",
+  "subscription": "Subscription:",
+  "first-option": "seconds",
+  "second-option": "minutes",
+  "donate": "Donate ($):",
+  "increase": "increase",
+  "limit-date": "Date Limit:",
+  "hours": "hours",
+  "start": "Start",
+  "stop": "Stop",
+  "pause": "Pause",
+  "resume": "Resume",
+  "portuguese": "Portuguese",
+  "english": "English"
+}

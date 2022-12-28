@@ -1,0 +1,17 @@
+{
+  "channel": "Canal da Twitch:",
+  "enable-counter": "Ativar:",
+  "subscription": "Inscrição:",
+  "first-option": "segundos",
+  "second-option": "minutos",
+  "donate": "Doação (R$):",
+  "increase": "aumenta",
+  "limit-date": "Data Limite:",
+  "hours": "horas",
+  "start": "Começar",
+  "stop": "Parar",
+  "pause": "Pausar",
+  "resume": "Resumir",
+  "portuguese": "Português",
+  "english": "Inglês"
+}

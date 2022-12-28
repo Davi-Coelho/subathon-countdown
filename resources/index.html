@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
         <div id="bots">
             <div id="channelInfo">
                 <input type="checkbox" name="ws-check" id="ws-check" />
-                <label for="channel">Canal da Twitch: </label>
+                <label for="channel" data-i18n="channel"></label>
                 <input type="text" name="channel" id="channel">
             </div>
             <div id="streamlabs">
@@ -68,48 +68,48 @@
         <div id="config">
             <button id="edit-button"><i class="fa-solid fa-pen-to-square"></i></button>
             <div id="enable-button" class="counter-value">
-                <label for="enable-counter" class="label">Ativar: </label>
+                <label for="enable-counter" class="label" data-i18n="enable-counter"></label>
                 <label class="switch">
                     <input type="checkbox" name="enable-counter" id="enable-counter">
                     <span class="slider round"></span>
                 </label>
             </div>
             <div id="subscription" class="counter-value">
-                <label for="subscription-counter" class="label">Subscription: </label>
+                <label for="subscription-counter" class="label" data-i18n="subscription"></label>
                 <input type="number" name="subscription-counter" id="subscription-counter" value="0" min="0">
                 <select name="subscription-select" id="subscription-select">
-                    <option value="1" selected>Segundos</option>
-                    <option value="2">Minutos</option>
+                    <option value="1" data-i18n="first-option"></option>
+                    <option value="2" data-i18n="second-option" selected></option>
                 </select>
             </div>
             <div id="bits" class="counter-value">
                 <label for="bits-value" class="label">Bits: </label>
                 <input type="number" name="bits-value" id="bits-value" value="1" min="1">
-                <label for="bits-counter">p/ cada</label>
+                <label for="bits-counter" data-i18n="increase"></label>
                 <input type="number" name="bits-counter" id="bits-counter" value="0" min="0">
                 <select name="bits-select" id="bits-select">
-                    <option value="1" selected>Segundos</option>
-                    <option value="2">Minutos</option>
+                    <option value="1" data-i18n="first-option"></option>
+                    <option value="2" data-i18n="second-option" selected></option>
                 </select>
             </div>
             <div id="donate" class="counter-value">
-                <label for="donate-value" class="label">Donate (R$): </label>
+                <label for="donate-value" class="label" data-i18n="donate"></label>
                 <input type="number" name="donate-value" id="donate-value" value="1" min="1">
-                <label for="donate-counter">p/ cada</label>
+                <label for="donate-counter" data-i18n="increase"></label>
                 <input type="number" name="donate-counter" id="donate-counter" value="0" min="0">
                 <select name="donate-select" id="donate-select">
-                    <option value="1" selected>Segundos</option>
-                    <option value="2">Minutos</option>
+                    <option value="1" data-i18n="first-option"></option>
+                    <option value="2" data-i18n="second-option" selected></option>
                 </select>
             </div>
             <span class="br"></span>
             <div id="limit-time" class="counter-value">
-                <label for="enable-limit" class="label">Data Limite: </label>
+                <label for="enable-limit" class="label" data-i18n="limit-date"></label>
                 <div class="limit-config">
                     <div>
                         <div id="max-time-div" hidden>
                             <input type="number" name="max-time" id="max-time" value="0" min="0">
-                            <label for="max-time">horas</label>
+                            <label for="max-time" data-i18n="hours">horas</label>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="enable-limit" id="enable-limit">
@@ -124,12 +124,21 @@
             </div>
         </div>
         <div id="controls">
-            <input id="pause-button" type="button" value="Pausar" hidden>
-            <input id="start-button" type="button" value="Começar">
+            <input id="pause-button" type="button" data-i18n="pause" hidden>
+            <input id="start-button" type="button" data-i18n="start">
+        </div>
+        <div id="locales">
+            <img id="portuguese-button" src="icons/br.svg"
+                 data-i18n="portuguese" alt="Portuguese"
+                 width="20" height="20" onclick="translator.load('pt')">
+            <img id="english-button" src="icons/us.svg"
+                 data-i18n="english" alt="English"
+                 width="20" height="20" onclick="translator.load('en')">
         </div>
     </div>
     <script src="js/neutralino.js"></script>
     <script src="js/socket.io.js"></script>
+    <script src="js/translator.js"></script>
     <script src="js/streamlabs.js"></script>
     <script src="js/streamelements.js"></script>
     <script src="js/main.js"></script>

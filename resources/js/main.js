@@ -1,3 +1,5 @@
+const translator = new Translator()
+
 let streamlabs = null
 let streamelements = null
 let countDownDate = null
@@ -68,7 +70,7 @@ async function startCountDown() {
         (socketCheck.checked || jwtCheck.checked) &&
         (!jwtCheck.checked || jwt.value !== '')) {
 
-        if (startButton.value === 'Começar') {
+        if (startButton.value === await translator.loadOne("start")) {
 
             if (socketCheck.checked) {
                 const socketToken = socket.value
@@ -187,7 +189,8 @@ async function switchMode(state) {
         countDownWorker = new Worker('js/worker.js')
         countDownWorker.onmessage = countDownFunction
 
-        startButton.value = 'Parar'
+        startButton.value = await translator.loadOne("stop")
+        startButton.dataset.i18n = "stop"
         startButton.classList.add('connected')
         pauseButton.removeAttribute('hidden')
         editButton.removeAttribute('hidden')
@@ -204,11 +207,13 @@ async function switchMode(state) {
         if (jwtCheck.checked) {
             streamelements.disconnect()
         }
-        startButton.value = 'Começar'
+        startButton.value = await translator.loadOne("start")
+        startButton.dataset.i18n = "start"
         startButton.classList.remove('connected')
         pauseButton.setAttribute('hidden', "true")
         editButton.setAttribute('hidden', "true")
-        pauseButton.value = 'Pausar'
+        pauseButton.value = await translator.loadOne("pause")
+        pauseButton.dataset.i18n = "pause"
         pauseButton.classList.remove('paused')
         pause = false
         limitReached = false
@@ -250,11 +255,12 @@ function switchInputs(state) {
     dateLimit.disabled = state
 }
 
-function pauseCountDown() {
+async function pauseCountDown() {
 
     if (pause) {
         pause = false
-        pauseButton.value = 'Pausar'
+        pauseButton.value = await translator.loadOne("pause")
+        pauseButton.dataset.i18n = "pause"
         pauseButton.classList.remove('paused')
         countDownDate = new Date().getTime() + timeLeft
         countDownWorker = new Worker('js/worker.js')
@@ -264,7 +270,8 @@ function pauseCountDown() {
         }
     } else {
         pause = true
-        pauseButton.value = 'Resumir'
+        pauseButton.value = await translator.loadOne("resume")
+        pauseButton.dataset.i18n = "resume"
         pauseButton.classList.add('paused')
         countDownWorker.terminate()
         countDownWorker = undefined
@@ -401,6 +408,7 @@ async function editConfig() {
 }
 
 async function loadConfig() {
+    translator.load()
     try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 

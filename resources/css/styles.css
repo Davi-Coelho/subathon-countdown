@@ -281,3 +281,16 @@ input::-webkit-inner-spin-button {
     width: 100%;
     border-bottom: 1px solid #e0e0e0;
 }
+
+#locales {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    right: 4%;
+    bottom: 2%;
+}
+
+#portuguese-button,
+#english-button {
+    cursor: pointer;
+}
