@@ -20,7 +20,14 @@ let inputs = {
     bitsCounter: '',
     donateValue: '',
     donateSelect: '',
-    donateCounter: ''
+    donateCounter: '',
+    donateCurrency: ''
+}
+const currencies = {
+    US: '$',
+    BRL: 'R$',
+    EUR: '€',
+    JPY: '¥'
 }
 
 const channelCheck = document.querySelector('#ws-check')
@@ -51,6 +58,7 @@ const dateLimit = document.querySelector('#date-limit')
 const enableLimit = document.querySelector('#enable-limit')
 const editButton = document.querySelector('#edit-button')
 const infoSpan = document.querySelector('#info')
+const donateCurrency = document.querySelector('#donate-currency')
 
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
@@ -367,6 +375,7 @@ async function saveData() {
     inputs.donateValue = donateValue.value
     inputs.donateSelect = donateSelect.value
     inputs.donateCounter = donateCounter.value
+    inputs.donateCurrency = donateCurrency.value
 
     await Neutralino.storage.setData('subathonConfig',
         JSON.stringify({
@@ -387,7 +396,8 @@ async function saveData() {
             enableCounter: enableCounter.checked,
             enableLimit: enableLimit.checked,
             timeLimit: timeLimit.value,
-            dateLimit: dateLimit.value
+            dateLimit: dateLimit.value,
+            donateCurrency: donateCurrency.value
         })
     )
 }
@@ -406,6 +416,11 @@ async function editConfig() {
             edit = true
         }
     }
+}
+
+async function getCurrency() {
+    const data = await (await fetch('https://ipapi.co/json/')).json()
+    return Object.keys(currencies).find(element => element === data.currency) ? data.currency : 'USD'
 }
 
 async function loadConfig() {
@@ -432,6 +447,7 @@ async function loadConfig() {
             enableLimit.checked = data.enableLimit
             timeLimit.value = data.timeLimit
             dateLimit.value = data.dateLimit
+            donateCurrency.value = data.donateCurrency
 
             updateTimeLeft()
             infoSpan.innerHTML = await translator.loadOne("load-success")
@@ -451,6 +467,7 @@ async function loadConfig() {
         timeLimit.value = `${hours}:${minutes}`
         dateLimit.value = `${year}-${month}-${day}`
         updateTimeLeft()
+        donateCurrency.value = await getCurrency()
         console.log(e)
     }
     showLimits()

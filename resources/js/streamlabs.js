@@ -15,10 +15,13 @@ async function streamlabsEvent(eventData) {
     if (!eventData.for && eventData.type === 'donation' && enableCounter.checked && !limitReached) {
         let amount = 0
 
-        if (event.currency !== 'BRL') {
-            await fetch(`https://api.exchangerate.host/latest?base=${event.currency}&amount=${event.amount}&symbols=BRL`)
+        if (event.currency !== inputs.donateCurrency) {
+            await fetch(`https://api.exchangerate.host/latest?base=${event.currency}&amount=${event.amount}&symbols=${inputs.donateCurrency}`)
                 .then(response => response.text())
-                .then(data => amount = (JSON.parse(data)).rates.BRL)
+                .then(data => {
+                    amount = (JSON.parse(data)).rates
+                    amount = amount[inputs.donateCurrency]
+                })
         } else {
             amount = event.amount
         }

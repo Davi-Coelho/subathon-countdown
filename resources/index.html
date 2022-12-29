@@ -15,7 +15,7 @@
             <div id="channelInfo">
                 <input type="checkbox" name="ws-check" id="ws-check" />
                 <label for="channel" data-i18n="channel"></label>
-                <input type="text" name="channel" id="channel">
+                <input type="text" name="channel" id="channel" autocomplete="off">
             </div>
             <div id="streamlabs">
                 <input type="checkbox" name="socket-check" id="socket-check" />
@@ -94,6 +94,12 @@
             </div>
             <div id="donate" class="counter-value">
                 <label for="donate-value" class="label" data-i18n="donate"></label>
+                <select name="donate-currency" id="donate-currency">
+                    <option value="USD" selected>$</option>
+                    <option value="BRL">R$</option>
+                    <option value="EUR">€</option>
+                    <option value="JPY">¥</option>
+                </select>
                 <input type="number" name="donate-value" id="donate-value" value="1" min="1">
                 <label for="donate-counter" data-i18n="increase"></label>
                 <input type="number" name="donate-counter" id="donate-counter" value="0" min="0">
