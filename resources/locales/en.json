@@ -13,5 +13,6 @@
   "pause": "Pause",
   "resume": "Resume",
   "portuguese": "Portuguese",
-  "english": "English"
+  "english": "English",
+  "load-success": "Settings loaded!"
 }

@@ -50,6 +50,7 @@ const timeLimit = document.querySelector('#time-limit')
 const dateLimit = document.querySelector('#date-limit')
 const enableLimit = document.querySelector('#enable-limit')
 const editButton = document.querySelector('#edit-button')
+const infoSpan = document.querySelector('#info')
 
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
@@ -433,6 +434,10 @@ async function loadConfig() {
             dateLimit.value = data.dateLimit
 
             updateTimeLeft()
+            infoSpan.innerHTML = await translator.loadOne("load-success")
+            setTimeout(() => {
+                infoSpan.innerHTML = ""
+            }, 3000)
         }
     }
     catch (e) {
