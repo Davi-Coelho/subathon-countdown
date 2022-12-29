@@ -117,12 +117,12 @@ p {
 
 .counter-value {
     display: inline;
-    width: 350px;
+    width: 359px;
 }
 
 .counter-value>.label {
     display: inline-block;
-    width: 75px;
+    width: 84px;
 }
 
 .counter-value>label {
@@ -291,7 +291,9 @@ input::-webkit-inner-spin-button {
 }
 
 #portuguese-button,
-#english-button {
+#english-button,
+#spanish-button,
+#japanese-button {
     cursor: pointer;
 }
 
@@ -301,4 +303,8 @@ input::-webkit-inner-spin-button {
     bottom: 12%;
     font-size: 0.8em;
     color: #01d501;
+}
+
+[data-i18n="increase"] {
+    font-size: 0.8em;
 }

@@ -402,6 +402,15 @@ async function saveData() {
     )
 }
 
+async function saveLanguage(lang) {
+    translator.load(lang)
+    await Neutralino.storage.setData('language',
+        JSON.stringify({
+            language: translator.getCurrentLanguage()
+        })
+    )
+}
+
 async function editConfig() {
     if (running) {
         if (edit) {
@@ -424,7 +433,6 @@ async function getCurrency() {
 }
 
 async function loadConfig() {
-    translator.load()
     try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 
@@ -468,6 +476,17 @@ async function loadConfig() {
         dateLimit.value = `${year}-${month}-${day}`
         updateTimeLeft()
         donateCurrency.value = await getCurrency()
+        console.log(e)
+    }
+
+    try {
+        const dataLanguage = JSON.parse(await Neutralino.storage.getData('language'))
+
+        if (dataLanguage) {
+            translator.load(dataLanguage.language)
+        }
+    } catch(e) {
+        await saveLanguage('')
         console.log(e)
     }
     showLimits()

@@ -2,6 +2,7 @@
   "channel": "Canal da Twitch:",
   "enable-counter": "Ativar:",
   "subscription": "Inscrição:",
+  "bits": "Bits:",
   "first-option": "segundos",
   "second-option": "minutos",
   "donate": "Doação:",
@@ -14,5 +15,7 @@
   "resume": "Resumir",
   "portuguese": "Português",
   "english": "Inglês",
+  "spanish": "Espanhol",
+  "japanese": "Japonês",
   "load-success": "Configurações carregadas!"
 }

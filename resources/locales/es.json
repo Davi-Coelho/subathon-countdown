@@ -1,0 +1,21 @@
+{
+  "channel": "Canal de Twitch:",
+  "enable-counter": "Habilitar:",
+  "subscription": "Suscripción:",
+  "bits": "Bits:",
+  "first-option": "segundos",
+  "second-option": "minutos",
+  "donate": "Donación:",
+  "increase": "incrementa",
+  "limit-date": "Fecha Límite:",
+  "hours": "horas",
+  "start": "Comenzar",
+  "stop": "Cerrar",
+  "pause": "Pausar",
+  "resume": "Reanudar",
+  "portuguese": "Portugués",
+  "english": "Inglés",
+  "spanish": "Español",
+  "japanese": "Japonés",
+  "load-success": "Configuraciones Cargadas!"
+}

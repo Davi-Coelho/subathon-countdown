@@ -2,6 +2,7 @@
   "channel": "Twitch Channel:",
   "enable-counter": "Enable:",
   "subscription": "Subscription:",
+  "bits": "Bits:",
   "first-option": "seconds",
   "second-option": "minutes",
   "donate": "Donate:",
@@ -14,5 +15,7 @@
   "resume": "Resume",
   "portuguese": "Portuguese",
   "english": "English",
+  "spanish": "Spanish",
+  "japanese": "Japanese",
   "load-success": "Settings loaded!"
 }

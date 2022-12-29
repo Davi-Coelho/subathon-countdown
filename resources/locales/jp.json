@@ -1,0 +1,21 @@
+{
+  "channel": "Twitch チャネル:",
+  "enable-counter": "イネーブル:",
+  "subscription": "サブスク:",
+  "bits": "ビッツ:",
+  "first-option": "秒",
+  "second-option": "分",
+  "donate": "投げ銭:",
+  "increase": "増やす",
+  "limit-date": "日付制限:",
+  "hours": "時間",
+  "start": "スタート",
+  "stop": "ストップ",
+  "pause": "一時停止",
+  "resume": "リテイク",
+  "portuguese": "ポルトガル語",
+  "english": "英語",
+  "spanish": "スペイン語",
+  "japanese": "日本語",
+  "load-success": "セッティングロードされた!"
+}

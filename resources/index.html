@@ -83,7 +83,7 @@
                 </select>
             </div>
             <div id="bits" class="counter-value">
-                <label for="bits-value" class="label">Bits: </label>
+                <label for="bits-value" class="label" data-i18n="bits"></label>
                 <input type="number" name="bits-value" id="bits-value" value="1" min="1">
                 <label for="bits-counter" data-i18n="increase"></label>
                 <input type="number" name="bits-counter" id="bits-counter" value="0" min="0">
@@ -136,10 +136,16 @@
         <div id="locales">
             <img id="portuguese-button" src="icons/br.svg"
                  data-i18n="portuguese" alt="Portuguese"
-                 width="20" height="20" onclick="translator.load('pt')">
+                 width="20" height="20" onclick="saveLanguage('pt')">
             <img id="english-button" src="icons/us.svg"
                  data-i18n="english" alt="English"
-                 width="20" height="20" onclick="translator.load('en')">
+                 width="20" height="20" onclick="saveLanguage('en')">
+            <img id="spanish-button" src="icons/es.svg"
+                 data-i18n="spanish" alt="Spanish"
+                 width="20" height="20" onclick="saveLanguage('es')">
+            <img id="japanese-button" src="icons/jp.svg"
+                 data-i18n="japanese" alt="Japanese"
+                 width="20" height="20" onclick="saveLanguage('jp')">
         </div>
         <span id="info"></span>
     </div>

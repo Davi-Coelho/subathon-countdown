@@ -11,6 +11,10 @@ class Translator {
         return lang.substring(0, 2)
     }
 
+    getCurrentLanguage() {
+        return this._lang
+    }
+
     load(lang = null) {
         if (lang) {
             this._lang = lang
