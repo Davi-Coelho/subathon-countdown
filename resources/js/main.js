@@ -59,6 +59,7 @@ const enableLimit = document.querySelector('#enable-limit')
 const editButton = document.querySelector('#edit-button')
 const infoSpan = document.querySelector('#info')
 const donateCurrency = document.querySelector('#donate-currency')
+const confirmModal = document.querySelector('#confirm-modal')
 
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
@@ -432,6 +433,21 @@ async function getCurrency() {
     return Object.keys(currencies).find(element => element === data.currency) ? data.currency : 'USD'
 }
 
+async function closeWindow() {
+    updateWebTimer('stop', 0, false)
+    await Neutralino.app.exit(0)
+}
+
+function changeModalVisibility() {
+    if (confirmModal.style.visibility === 'hidden' || confirmModal.style.visibility === '') {
+        confirmModal.style.visibility = 'visible'
+        confirmModal.style.opacity = '1'
+    } else {
+        confirmModal.style.visibility = 'hidden'
+        confirmModal.style.opacity = '0'
+    }
+}
+
 async function loadConfig() {
     try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
@@ -493,7 +509,12 @@ async function loadConfig() {
 }
 
 async function onWindowClose() {
-    await Neutralino.app.exit(0)
+    if (running) {
+        changeModalVisibility()
+    } else {
+        updateWebTimer('stop', 0, false)
+        await Neutralino.app.exit(0)
+    }
 }
 
 Neutralino.init()

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/slider.css">
     <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/modal.css">
 </head>
 
 <body>
@@ -14,7 +15,7 @@
         <div id="bots">
             <div id="channelInfo">
                 <input type="checkbox" name="ws-check" id="ws-check" />
-                <label for="channel" data-i18n="channel"></label>
+                <label for="channel" data-i18n="channel">Web Timer Token:</label>
                 <input type="text" name="channel" id="channel" autocomplete="off">
             </div>
             <div id="streamlabs">
@@ -148,6 +149,15 @@
                  width="20" height="20" onclick="saveLanguage('jp')">
         </div>
         <span id="info"></span>
+        <div id="confirm-modal" class="modal">
+            <div class="modal__content">
+                <span>O timer ainda está em andamento, tem certeza que quer fechar o programa?</span>
+                <div class="modal__buttons">
+                    <button class="modal__button" onclick="closeWindow()">Sim</button>
+                    <button class="modal__button" onclick="changeModalVisibility()">Não</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="js/neutralino.js"></script>
     <script src="js/socket.io.js"></script>
