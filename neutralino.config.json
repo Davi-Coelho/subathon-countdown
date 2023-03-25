@@ -18,6 +18,9 @@
     "window.setSize",
     "window.getSize"
   ],
+  "logging": {
+    "writeToLogFile": false
+  },
   "modes": {
     "window": {
       "title": "Subathon Countdown",
