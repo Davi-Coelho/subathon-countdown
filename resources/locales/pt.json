@@ -16,5 +16,8 @@
   "english": "Inglês",
   "spanish": "Espanhol",
   "japanese": "Japonês",
-  "load-success": "Configurações carregadas!"
+  "load-success": "Configurações carregadas!",
+  "close-message": "O timer ainda está em andamento, tem certeza que quer fechar o programa?",
+  "close-yes": "Sim",
+  "close-no": "Não"
 }

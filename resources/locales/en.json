@@ -16,5 +16,9 @@
   "english": "English",
   "spanish": "Spanish",
   "japanese": "Japanese",
-  "load-success": "Settings loaded!"
+  "load-success": "Settings loaded!",
+  "close-message": "The timer is still running, are you sure you want to close the program?",
+  "close-yes": "Yes",
+  "close-no": "No"
 }
+

@@ -16,5 +16,8 @@
   "english": "英語",
   "spanish": "スペイン語",
   "japanese": "日本語",
-  "load-success": "セッティングロードされた!"
+  "load-success": "セッティングロードされた!",
+  "close-message": "タイマーはまだ実行中です。プログラムを終了してもよろしいですか",
+  "close-yes": "はい",
+  "close-no": "いいえ"
 }

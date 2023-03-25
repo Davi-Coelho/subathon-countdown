@@ -151,10 +151,10 @@
         <span id="info"></span>
         <div id="confirm-modal" class="modal">
             <div class="modal__content">
-                <span>O timer ainda está em andamento, tem certeza que quer fechar o programa?</span>
+                <span data-i18n="close-message"></span>
                 <div class="modal__buttons">
-                    <button class="modal__button" onclick="closeWindow()">Sim</button>
-                    <button class="modal__button" onclick="changeModalVisibility()">Não</button>
+                    <button class="modal__button" onclick="closeWindow()" data-i18n="close-yes"></button>
+                    <button class="modal__button" onclick="changeModalVisibility()" data-i18n="close-no"></button>
                 </div>
             </div>
         </div>
