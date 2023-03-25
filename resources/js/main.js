@@ -191,7 +191,6 @@ async function switchMode(state) {
     if (state) {
         await saveData()
         currentLogFile = new Date().toLocaleString('pt-BR').replace(/\//g, '-').replace(/:/g, '_')
-        await Neutralino.filesystem.writeFile(`./resumo ${currentLogFile}.txt`, "")
 
         countDownDate = new Date().getTime() + (timeLeft > 0 ? timeLeft + 1000 : 1000)
         maxTimeValue = new Date().getTime() + parseFloat(maxTime.value) * 60 * 60 * 1000
@@ -449,6 +448,18 @@ function changeModalVisibility() {
 }
 
 async function loadConfig() {
+
+    try {
+        const dataLanguage = JSON.parse(await Neutralino.storage.getData('language'))
+
+        if (dataLanguage) {
+            translator.load(dataLanguage.language)
+        }
+    } catch(e) {
+        await saveLanguage('')
+        console.log(e)
+    }
+
     try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 
@@ -495,16 +506,6 @@ async function loadConfig() {
         console.log(e)
     }
 
-    try {
-        const dataLanguage = JSON.parse(await Neutralino.storage.getData('language'))
-
-        if (dataLanguage) {
-            translator.load(dataLanguage.language)
-        }
-    } catch(e) {
-        await saveLanguage('')
-        console.log(e)
-    }
     showLimits()
 }
 

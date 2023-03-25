@@ -38,7 +38,6 @@ async function streamelementsEvent(eventData) {
                 }
 
                 times = amount / parseFloat(inputs.donateValue)
-                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} doou R$${amount}\n`)
                 mult = inputs.donateSelect === '1' ? 1 : 60
 
                 if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.donateCounter) * 1000 * mult)) <= maxTimeValue) {
@@ -57,7 +56,6 @@ async function streamelementsEvent(eventData) {
                 }
                 break
             case 'subscriber':
-                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} se inscreveu.\n`)
                 mult = inputs.subscriptionSelect === '1' ? 1 : 60
 
                 if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
@@ -76,7 +74,6 @@ async function streamelementsEvent(eventData) {
                 }
                 break
             case 'cheer':
-                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.username} doou ${event.amount} bits.\n`)
                 times = event.amount / parseFloat(inputs.bitsValue)
                 mult = inputs.bitsSelect === '1' ? 1 : 60
 

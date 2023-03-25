@@ -27,7 +27,6 @@ async function streamlabsEvent(eventData) {
         }
 
         const times = amount / parseFloat(inputs.donateValue)
-        await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.from} doou R$${amount}\n`)
         mult = inputs.donateSelect === '1' ? 1 : 60
 
         if (!enableLimit.checked || (countDownDate + times * (parseFloat(inputs.donateCounter) * 1000 * mult)) <= maxTimeValue) {
@@ -49,7 +48,6 @@ async function streamlabsEvent(eventData) {
         switch (eventData.type) {
             case 'subscription':
             case 'resub':
-                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} se inscreveu.\n`)
                 mult = inputs.subscriptionSelect === '1' ? 1 : 60
 
                 if (!enableLimit.checked || (countDownDate + parseFloat(inputs.subscriptionCounter) * 1000 * mult) <= maxTimeValue) {
@@ -68,7 +66,6 @@ async function streamlabsEvent(eventData) {
                 }
                 break
             case 'bits':
-                await Neutralino.filesystem.appendFile(`./resumo ${currentLogFile}.txt`, `${event.name} doou ${event.amount} bits.\n`)
                 const times = event.amount / parseFloat(inputs.bitsValue)
                 mult = inputs.bitsSelect === '1' ? 1 : 60
 
