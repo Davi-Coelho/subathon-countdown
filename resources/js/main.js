@@ -514,14 +514,30 @@ async function onWindowClose() {
     if (running) {
         changeModalVisibility()
     } else {
-        updateWebTimer('stop', 0, false)
-        await Neutralino.app.exit(0)
+        closeWindow()
     }
 }
 
 Neutralino.init()
 Neutralino.events.on('windowClose', onWindowClose)
+
+async function autoUpdate() {
+    try {
+        let url = `${NL_UPDATER_DOMAIN}/update_manifest.json`
+        let manifest = await Neutralino.updater.checkForUpdates(url)
+
+        if(manifest.version != NL_APPVERSION) {
+            await Neutralino.updater.install()
+            await Neutralino.app.restartProcess()
+        }
+    }
+    catch(err) {
+        console.log("Erro ao atualizar a aplicação!")
+        console.log(err)
+    }
+}
+
 loadConfig()
     .then(() => {
-        console.log("Configurações carregadas!")
+        autoUpdate()
     })
