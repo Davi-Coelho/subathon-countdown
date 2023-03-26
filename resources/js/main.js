@@ -73,6 +73,7 @@ document.addEventListener('streamlabsConnected', (e) => initTimer(e))
 document.addEventListener('streamlabsDisconnected', (e) => initTimer(e))
 document.addEventListener('streamelementsConnected', (e) => initTimer(e))
 document.addEventListener('streamelementsDisconnected', (e) => initTimer(e))
+document.addEventListener('contextmenu', event => event.preventDefault())
 
 async function startCountDown() {
 
@@ -159,7 +160,7 @@ function updateWebTimer(type, countDownDate, isRunning) {
         mode: 'no-cors'
     }
 
-    fetch(`https://davicoelho.com.br/subathon/timer/${channel.value}`, requestOptions)
+    fetch(NL_DOMAIN + channel.value, requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error))

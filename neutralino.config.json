@@ -21,11 +21,14 @@
   "logging": {
     "writeToLogFile": false
   },
+  "globalVariables": {
+    "DOMAIN": "https://davicoelho.com.br/subathon/timer/"
+  },
   "modes": {
     "window": {
       "title": "Subathon Countdown",
       "width": 450,
-      "height": 650,
+      "height": 655,
       "fullScreen": false,
       "alwaysOnTop": false,
       "icon": "/resources/icons/appIcon.png",
