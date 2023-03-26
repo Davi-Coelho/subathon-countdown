@@ -19,5 +19,6 @@
   "load-success": "Configuraciones Cargadas!",
   "close-message": "El temporizador sigue funcionando, ¿está seguro de que desea cerrar el programa?",
   "close-yes": "Si",
-  "close-no": "No"
+  "close-no": "No",
+  "update-message": "Se ha encontrado una versión más nueva ¿Quieres actualizar?"
 }

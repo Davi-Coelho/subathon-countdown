@@ -173,12 +173,21 @@
                  width="20" height="20" onclick="saveLanguage('jp')">
         </div>
         <span id="info"></span>
+        <div id="update-modal" class="modal">
+            <div class="modal__content">
+                <span data-i18n="update-message"></span>
+                <div class="modal__buttons_update">
+                    <button class="modal__button" onclick="updateApp()" data-i18n="close-yes"></button>
+                    <button class="modal__button" onclick="changeModalVisibility(updateModal)" data-i18n="close-no"></button>
+                </div>
+            </div>
+        </div>
         <div id="confirm-modal" class="modal">
             <div class="modal__content">
                 <span data-i18n="close-message"></span>
                 <div class="modal__buttons">
                     <button class="modal__button" onclick="closeWindow()" data-i18n="close-yes"></button>
-                    <button class="modal__button" onclick="changeModalVisibility()" data-i18n="close-no"></button>
+                    <button class="modal__button" onclick="changeModalVisibility(confirmModal)" data-i18n="close-no"></button>
                 </div>
             </div>
         </div>

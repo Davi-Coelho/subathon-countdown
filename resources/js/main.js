@@ -60,6 +60,7 @@ const editButton = document.querySelector('#edit-button')
 const infoSpan = document.querySelector('#info')
 const donateCurrency = document.querySelector('#donate-currency')
 const confirmModal = document.querySelector('#confirm-modal')
+const updateModal = document.querySelector('#update-modal')
 
 startButton.onclick = startCountDown
 pauseButton.onclick = pauseCountDown
@@ -438,13 +439,13 @@ async function closeWindow() {
     await Neutralino.app.exit(0)
 }
 
-function changeModalVisibility() {
-    if (confirmModal.style.visibility === 'hidden' || confirmModal.style.visibility === '') {
-        confirmModal.style.visibility = 'visible'
-        confirmModal.style.opacity = '1'
+function changeModalVisibility(modal) {
+    if (modal.style.visibility === 'hidden' || modal.style.visibility === '') {
+        modal.style.visibility = 'visible'
+        modal.style.opacity = '1'
     } else {
-        confirmModal.style.visibility = 'hidden'
-        confirmModal.style.opacity = '0'
+        modal.style.visibility = 'hidden'
+        modal.style.opacity = '0'
     }
 }
 
@@ -512,7 +513,7 @@ async function loadConfig() {
 
 async function onWindowClose() {
     if (running) {
-        changeModalVisibility()
+        changeModalVisibility(confirmModal)
     } else {
         closeWindow()
     }
@@ -521,14 +522,18 @@ async function onWindowClose() {
 Neutralino.init()
 Neutralino.events.on('windowClose', onWindowClose)
 
+async function updateApp() {
+    await Neutralino.updater.install()
+    await Neutralino.app.restartProcess()
+}
+
 async function autoUpdate() {
     try {
         let url = `${NL_UPDATER_DOMAIN}/update_manifest.json`
         let manifest = await Neutralino.updater.checkForUpdates(url)
 
         if(manifest.version != NL_APPVERSION) {
-            await Neutralino.updater.install()
-            await Neutralino.app.restartProcess()
+            changeModalVisibility(updateModal)
         }
     }
     catch(err) {

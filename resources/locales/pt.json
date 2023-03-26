@@ -19,5 +19,6 @@
   "load-success": "Configurações carregadas!",
   "close-message": "O timer ainda está em andamento, tem certeza que quer fechar o programa?",
   "close-yes": "Sim",
-  "close-no": "Não"
+  "close-no": "Não",
+  "update-message": "Uma nova versão foi encontrada, deseja atualizar?"
 }

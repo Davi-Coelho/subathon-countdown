@@ -19,5 +19,6 @@
   "load-success": "セッティングロードされた!",
   "close-message": "タイマーはまだ実行中です。プログラムを終了してもよろしいですか",
   "close-yes": "はい",
-  "close-no": "いいえ"
+  "close-no": "いいえ",
+  "update-message": "新しいバージョンが見つかりました。更新しますか"
 }
