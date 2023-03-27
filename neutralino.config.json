@@ -1,6 +1,6 @@
 {
   "applicationId": "0i53VJ7AD0wY",
-  "version": "3.1.0",
+  "version": "3.0.0",
   "defaultMode": "window",
   "port": 3001,
   "documentRoot": "/resources/",
@@ -15,6 +15,7 @@
     "debug.log",
     "filesystem.writeFile",
     "filesystem.appendFile",
+    "filesystem.writeBinaryFile",
     "window.setSize",
     "window.getSize"
   ],
