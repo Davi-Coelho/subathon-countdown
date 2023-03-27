@@ -21,7 +21,7 @@ async function streamelementsEvent(eventData) {
     let mult = 0
     console.log(eventData)
 
-    if (enableCounter.checked && (!socketCheck.checked || !jwtCheck.checked || listener === 'tip') && !limitReached) {
+    if ((!socketCheck.checked || !jwtCheck.checked || listener === 'tip') && !limitReached) {
         switch (listener) {
             case 'tip':
                 let amount = 0

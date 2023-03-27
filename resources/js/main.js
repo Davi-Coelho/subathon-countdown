@@ -47,7 +47,6 @@ const bitsCounter = document.querySelector('#bits-counter')
 const donateValue = document.querySelector('#donate-value')
 const donateSelect = document.querySelector('#donate-select')
 const donateCounter = document.querySelector('#donate-counter')
-const enableCounter = document.querySelector('#enable-counter')
 const hoursLabel = document.getElementById('hours')
 const minutesLabel = document.getElementById('mins')
 const secondsLabel = document.getElementById('secs')
@@ -163,7 +162,6 @@ function updateWebTimer(type, countDownDate, isRunning) {
 
     fetch(NL_DOMAIN + channel.value, requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
         .catch(error => console.log('error', error))
 }
 
@@ -395,7 +393,6 @@ async function saveData() {
             donateValue: donateValue.value,
             donateSelect: donateSelect.value,
             donateCounter: donateCounter.value,
-            enableCounter: enableCounter.checked,
             enableLimit: enableLimit.checked,
             timeLimit: timeLimit.value,
             dateLimit: dateLimit.value,
@@ -480,7 +477,6 @@ async function loadConfig() {
             donateValue.value = data.donateValue
             donateSelect.value = data.donateSelect
             donateCounter.value = data.donateCounter
-            enableCounter.checked = data.enableCounter
             enableLimit.checked = data.enableLimit
             timeLimit.value = data.timeLimit
             dateLimit.value = data.dateLimit

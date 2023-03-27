@@ -12,7 +12,7 @@ async function streamlabsEvent(eventData) {
     let mult = null
     console.log(eventData)
 
-    if (!eventData.for && eventData.type === 'donation' && enableCounter.checked && !limitReached) {
+    if (!eventData.for && eventData.type === 'donation' && !limitReached) {
         let amount = 0
 
         if (event.currency !== inputs.donateCurrency) {
@@ -44,7 +44,7 @@ async function streamlabsEvent(eventData) {
             updateWebTimer('update', countDownDate, running)
         }
     }
-    if (eventData.for === 'twitch_account' && enableCounter.checked && (socketCheck.checked || !jwtCheck.checked) && !limitReached) {
+    if (eventData.for === 'twitch_account' && (socketCheck.checked || !jwtCheck.checked) && !limitReached) {
         switch (eventData.type) {
             case 'subscription':
             case 'resub':
