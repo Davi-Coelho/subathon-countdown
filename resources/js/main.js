@@ -1,5 +1,9 @@
 const translator = new Translator()
 
+let webSocket = null
+let subathonUserId = null
+let streamlabsUserId = null
+let streamelementsUserId = null
 let streamlabs = null
 let streamelements = null
 let countDownDate = null
@@ -30,13 +34,7 @@ const currencies = {
     JPY: '¥'
 }
 
-const channelCheck = document.querySelector('#ws-check')
-const channel = document.querySelector('#channel')
-const socketCheck = document.querySelector('#socket-check')
-const jwtCheck = document.querySelector('#jwt-check')
 const configDiv = document.querySelector('#config')
-const socket = document.querySelector('#socket')
-const jwt = document.querySelector('#jwt')
 const startButton = document.querySelector('#start-button')
 const pauseButton = document.querySelector('#pause-button')
 const subscriptionSelect = document.querySelector('#subscription-select')
@@ -77,13 +75,11 @@ document.addEventListener('contextmenu', event => event.preventDefault())
 
 async function startCountDown() {
 
-    if ((!socketCheck.checked || socket.value !== '') &&
-        (socketCheck.checked || jwtCheck.checked) &&
-        (!jwtCheck.checked || jwt.value !== '')) {
+    if (streamlabsUserId || streamelementsUserId) {
 
         if (startButton.value === await translator.loadOne("start")) {
 
-            if (socketCheck.checked) {
+            if (streamlabsUserId) {
                 const socketToken = socket.value
 
                 streamlabs = io(`https://sockets.streamlabs.com?token=${socketToken}`, { transports: ['websocket'] })
@@ -93,8 +89,9 @@ async function startCountDown() {
                 streamlabs.on('event', (eventData) => { streamlabsEvent(eventData) })
             }
 
-            if (jwtCheck.checked) {
-                const jwtToken = jwt.value
+            // TODO: IMPLEMENTAR A INTEGRAÇÃO COM O STREAMELEMENTS
+            if (streamelementsUserId) {
+                const jwtToken = null
 
                 streamelements = io('https://realtime.streamelements.com', { transports: ['websocket'] })
 
@@ -120,7 +117,7 @@ async function initTimer(e) {
                 await switchMode(true)
                 waiting = false
             } else {
-                if (jwtCheck.checked) {
+                if (streamelementsUserId) {
                     waiting = true
                 } else {
                     await switchMode(true)
@@ -133,7 +130,7 @@ async function initTimer(e) {
                 await switchMode(true)
                 waiting = false
             } else {
-                if (socketCheck.checked) {
+                if (streamlabsUserId) {
                     waiting = true
                 } else {
                     await switchMode(true)
@@ -160,7 +157,7 @@ function updateWebTimer(type, countDownDate, isRunning) {
         mode: 'no-cors'
     }
 
-    fetch(NL_DOMAIN + channel.value, requestOptions)
+    fetch(NL_DOMAIN + streamlabsUserId, requestOptions)
         .then(response => response.text())
         .catch(error => console.log('error', error))
 }
@@ -210,10 +207,10 @@ async function switchMode(state) {
 
     } else {
 
-        if (socketCheck.checked) {
+        if (streamlabsUserId) {
             streamlabs.disconnect()
         }
-        if (jwtCheck.checked) {
+        if (streamelementsUserId) {
             streamelements.disconnect()
         }
         startButton.value = await translator.loadOne("start")
@@ -228,9 +225,7 @@ async function switchMode(state) {
         limitReached = false
         timeLeft = 0
         await updateTimer()
-        if (channelCheck.checked) {
-            updateWebTimer('stop', 0, state)
-        }
+        updateWebTimer('stop', 0, state)
 
         if (countDownWorker) {
             countDownWorker.terminate()
@@ -240,12 +235,6 @@ async function switchMode(state) {
     }
 
     running = state
-    channel.disabled = state
-    socket.disabled = state
-    jwt.disabled = state
-    channelCheck.disabled = state
-    socketCheck.disabled = state
-    jwtCheck.disabled = state
     switchInputs(state)
 }
 
@@ -379,12 +368,6 @@ async function saveData() {
 
     await Neutralino.storage.setData('subathonConfig',
         JSON.stringify({
-            channelCheck: channelCheck.checked,
-            channel: channel.value,
-            socketCheck: socketCheck.checked,
-            jwtCheck: jwtCheck.checked,
-            socketToken: socket.value,
-            jwt: jwt.value,
             subscriptionSelect: subscriptionSelect.value,
             subscriptionCounter: subscriptionCounter.value,
             bitsValue: bitsValue.value,
@@ -460,15 +443,21 @@ async function loadConfig() {
     }
 
     try {
+        const subathonWebData = JSON.parse(await Neutralino.storage.getData('subathonWebData'))
+
+        if (subathonWebData) {
+            subathonUserId = subathonWebData.id
+            streamlabsUserId = subathonWebData.streamlabsId
+            streamelementsUserId = subathonWebData.streamelementsId
+        }
+    } catch (e) {
+        console.log(e)
+    }
+
+    try {
         const data = JSON.parse(await Neutralino.storage.getData('subathonConfig'))
 
         if (data) {
-            channelCheck.checked = data.channelCheck
-            channel.value = data.channel
-            socketCheck.checked = data.socketCheck
-            jwtCheck.checked = data.jwtCheck
-            socket.value = data.socketToken
-            jwt.value = data.jwt
             subscriptionSelect.value = data.subscriptionSelect
             subscriptionCounter.value = data.subscriptionCounter
             bitsValue.value = data.bitsValue
@@ -536,6 +525,31 @@ async function autoUpdate() {
         console.log("Erro ao atualizar a aplicação!")
         console.log(err)
     }
+}
+
+function openURL() {
+    const state = CryptoJS.MD5((new Date().getTime()).toString()).toString().toUpperCase()
+    const streamlabsConnectModal = document.querySelector('#streamlabs-connect-modal')
+    webSocket = new WebSocket(`wss://subathon.davicoelho.com/?id=${state}`)
+
+    webSocket.onopen = function () {
+        changeModalVisibility(streamlabsConnectModal)
+        ws.send('Conectado!')
+    }
+    webSocket.onmessage = async function (msg) {
+        const data = JSON.parse(msg)
+
+        if (data.authenticated) {
+            const streamlabsConnectSpan = document.querySelector('[data-i18n=streamlabs-connect]')
+            const loadingAnimation = document.querySelector('#loading-animation')
+
+            streamlabsConnectSpan.innerHTML = await translator.loadOne("connect-success")
+            loadingAnimation.style.display = 'none'
+            setTimeout(changeModalVisibility(streamlabsConnectModal), 2000)
+        }
+    }
+    const url = `https://streamlabs.com/api/v2.0/authorize?client_id=03bf0007-e939-4524-83a7-04935b158fb0&redirect_uri=https://subathon.davicoelho.com/auth&scope=socket.token&response_type=code&state=${state}`
+    Neutralino.os.open(url)
 }
 
 loadConfig()

@@ -1,4 +1,5 @@
 {
+  "connect": "コネクト",
   "subscription": "サブスク:",
   "bits": "ビッツ:",
   "first-option": "秒",
@@ -19,5 +20,7 @@
   "close-message": "タイマーはまだ実行中です。プログラムを終了してもよろしいですか",
   "close-yes": "はい",
   "close-no": "いいえ",
-  "update-message": "新しいバージョンが見つかりました。更新しますか"
+  "update-message": "新しいバージョンが見つかりました。更新しますか",
+  "streamlabs-connect": "Streamlabsとの接続しています...",
+  "connect-success": "接続された!"
 }

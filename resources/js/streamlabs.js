@@ -40,11 +40,9 @@ async function streamlabsEvent(eventData) {
             await countDownFunction()
         }
 
-        if (channelCheck.checked) {
-            updateWebTimer('update', countDownDate, running)
-        }
+        updateWebTimer('update', countDownDate, running)
     }
-    if (eventData.for === 'twitch_account' && (socketCheck.checked || !jwtCheck.checked) && !limitReached) {
+    if (eventData.for === 'twitch_account' && streamlabsUserId && !limitReached) {
         switch (eventData.type) {
             case 'subscription':
             case 'resub':
@@ -61,11 +59,10 @@ async function streamlabsEvent(eventData) {
                     await countDownFunction()
                 }
 
-                if (channelCheck.checked) {
-                    updateWebTimer('update', countDownDate, running)
-                }
+                updateWebTimer('update', countDownDate, running)
                 break
             case 'bits':
+                // TODO: corrigir divisão por zero
                 const times = event.amount / parseFloat(inputs.bitsValue)
                 mult = inputs.bitsSelect === '1' ? 1 : 60
 
@@ -80,9 +77,7 @@ async function streamlabsEvent(eventData) {
                     await countDownFunction()
                 }
 
-                if (channelCheck.checked) {
-                    updateWebTimer('update', countDownDate, running)
-                }
+                updateWebTimer('update', countDownDate, running)
                 break
         }
     }

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Subathon Countdown</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/slider.css">
     <link rel="stylesheet" href="css/all.min.css">
@@ -13,20 +14,13 @@
 <body>
     <div id="neutralinoapp">
         <div id="bots">
-            <div id="channelInfo">
-                <input type="checkbox" name="ws-check" id="ws-check" />
-                <label for="channel" data-i18n="channel">Web Timer Token:</label>
-                <input type="text" name="channel" id="channel" autocomplete="off">
-            </div>
             <div id="streamlabs">
-                <input type="checkbox" name="socket-check" id="socket-check" />
-                <label for="socket">Streamlabs Socket: </label>
-                <input type="password" name="socket" id="socket">
+                <label for="streamlabs-connect">Streamlabs: </label>
+                <input type="button" name="socket" id="streamlabs-connect" data-i18n="connect">
             </div>
-            <div id="streamelements">
-                <input type="checkbox" name="jwt-check" id="jwt-check" />
-                <label for="jwt">StreamElements JWT: </label>
-                <input type="password" name="jwt" id="jwt">
+            <div id="timer-url">
+                <label for="url">Timer URL: </label>
+                <input type="button" name="url" id="url" />
             </div>
         </div>
         <div id="timer">
@@ -182,6 +176,16 @@
                     <button class="modal__button" onclick="closeWindow()" data-i18n="close-yes"></button>
                     <button class="modal__button" onclick="changeModalVisibility(confirmModal)" data-i18n="close-no"></button>
                 </div>
+            </div>
+        </div>
+        <div id="streamlabs-connect-modal" class="modal">
+            <div class="modal__content">
+                <span data-i18n="streamlabs-connect"></span>
+                <svg id="loading-animation" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                    <path fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+                        <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="1s" from="0 50 50" to="360 50 50" repeatCount="indefinite" />
+                    </path>
+                </svg>
             </div>
         </div>
     </div>

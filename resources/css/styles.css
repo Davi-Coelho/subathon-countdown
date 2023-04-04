@@ -142,11 +142,19 @@ p {
     align-self: flex-start;
 }
 
-#socket, #jwt, #channel {
+#socket, #jwt, #url {
     width: 200px;
 }
 
-#channelInfo > label,
+#streamlabs,
+#timer-url {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#timer-url > label,
 #streamlabs > label,
 #streamelements > label {
     display: inline-block;
@@ -159,19 +167,9 @@ input[type="number"] {
     -webkit-appearance: none;
 }
 
-input[type="time"],
-input[type="date"] {
-    padding: 1px 4px;
-}
-
-input[type="time"]::-webkit-calendar-picker-indicator,
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-}
-
 #jwt,
 #socket,
-#channel,
+#url,
 input[type="number"],
 input[type="time"],
 input[type="date"] {
@@ -183,8 +181,19 @@ input[type="date"] {
     outline: none;
 }
 
+input[type="time"],
+input[type="date"] {
+    padding: 1px 4px;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
 #pause-button,
-#start-button {
+#start-button,
+#streamlabs-connect {
     color: var(--font-color);
     font-size: 0.9em;
     width: 110px;
@@ -197,7 +206,8 @@ input[type="date"] {
     cursor: pointer;
 }
 
-#start-button:hover {
+#start-button:hover,
+#streamlabs-connect:hover {
     background-color: var(--button-hover-color);
 }
 

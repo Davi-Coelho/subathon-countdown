@@ -1,4 +1,5 @@
 {
+  "connect": "Conectar",
   "subscription": "Inscrição:",
   "bits": "Bits:",
   "first-option": "segundos",
@@ -19,5 +20,7 @@
   "close-message": "O timer ainda está em andamento, tem certeza que quer fechar o programa?",
   "close-yes": "Sim",
   "close-no": "Não",
-  "update-message": "Uma nova versão foi encontrada, deseja atualizar?"
+  "update-message": "Uma nova versão foi encontrada, deseja atualizar?",
+  "streamlabs-connect": "Conectando com o Streamlabs...",
+  "connect-success": "Conectado!"
 }

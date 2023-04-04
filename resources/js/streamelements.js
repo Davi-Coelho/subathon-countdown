@@ -21,7 +21,7 @@ async function streamelementsEvent(eventData) {
     let mult = 0
     console.log(eventData)
 
-    if ((!socketCheck.checked || !jwtCheck.checked || listener === 'tip') && !limitReached) {
+    if ((!streamlabsUserId || !streamelementsUserId || listener === 'tip') && !limitReached) {
         switch (listener) {
             case 'tip':
                 let amount = 0
@@ -51,9 +51,7 @@ async function streamelementsEvent(eventData) {
                     await countDownFunction()
                 }
 
-                if (channelCheck.checked) {
-                    updateWebTimer('update', countDownDate, running)
-                }
+                updateWebTimer('update', countDownDate, running)
                 break
             case 'subscriber':
                 mult = inputs.subscriptionSelect === '1' ? 1 : 60
@@ -69,9 +67,7 @@ async function streamelementsEvent(eventData) {
                     await countDownFunction()
                 }
 
-                if (channelCheck.checked) {
-                    updateWebTimer('update', countDownDate, running)
-                }
+                updateWebTimer('update', countDownDate, running)
                 break
             case 'cheer':
                 times = event.amount / parseFloat(inputs.bitsValue)
@@ -88,9 +84,7 @@ async function streamelementsEvent(eventData) {
                     await countDownFunction()
                 }
 
-                if (channelCheck.checked) {
-                    updateWebTimer('update', countDownDate, running)
-                }
+                updateWebTimer('update', countDownDate, running)
                 break
             default:
                 break

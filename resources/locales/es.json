@@ -1,4 +1,5 @@
 {
+  "connect": "Conectar",
   "subscription": "Suscripción:",
   "bits": "Bits:",
   "first-option": "segundos",
@@ -15,9 +16,11 @@
   "english": "Inglés",
   "spanish": "Español",
   "japanese": "Japonés",
-  "load-success": "Configuraciones Cargadas!",
-  "close-message": "El temporizador sigue funcionando, ¿está seguro de que desea cerrar el programa?",
+  "load-success": "¡Configuraciones Cargadas!",
+  "close-message": "El temporizador sigue funcionando, ¿Está seguro de que desea cerrar el programa?",
   "close-yes": "Si",
   "close-no": "No",
-  "update-message": "Se ha encontrado una versión más nueva ¿Quieres actualizar?"
+  "update-message": "Se ha encontrado una versión más nueva ¿Quieres actualizar?",
+  "streamlabs-connect": "Conectando con Streamlabs...",
+  "connect-success": "¡Conectado!"
 }
