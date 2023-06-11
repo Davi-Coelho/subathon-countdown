@@ -23,7 +23,7 @@
     "writeToLogFile": false
   },
   "globalVariables": {
-    "DOMAIN": "https://davicoelho.com.br/subathon/timer/",
+    "DOMAIN": "https://subathontimer.davicoelho.com/timer/",
     "UPDATER_DOMAIN": "https://subathonupdater.davicoelho.com"
   },
   "modes": {

@@ -508,7 +508,7 @@ async function loadConfig() {
 }
 
 async function onWindowClose() {
-    if (running) {
+    if (running && false) {
         changeModalVisibility(confirmModal)
     } else {
         closeWindow()
@@ -539,6 +539,3 @@ async function autoUpdate() {
 }
 
 loadConfig()
-    .then(() => {
-        autoUpdate()
-    })
