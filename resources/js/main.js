@@ -267,7 +267,6 @@ function switchInputs(state) {
 async function pauseCountDown() {
 
     if (pause) {
-        pause = false
         pauseButton.value = await translator.loadOne("pause")
         pauseButton.dataset.i18n = "pause"
         pauseButton.classList.remove('paused')
@@ -278,7 +277,6 @@ async function pauseCountDown() {
             updateWebTimer('resume', countDownDate, pause)
         }
     } else {
-        pause = true
         pauseButton.value = await translator.loadOne("resume")
         pauseButton.dataset.i18n = "resume"
         pauseButton.classList.add('paused')
@@ -288,6 +286,7 @@ async function pauseCountDown() {
             updateWebTimer('pause', countDownDate, pause)
         }
     }
+    pause = !pause
 }
 
 async function changeTimer(element) {
